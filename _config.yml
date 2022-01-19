@@ -12,9 +12,9 @@ github_repo: "https://github.com/lhondong/lhondong.github.io.git"
 # Publish posts or collection documents with a future date.
 future: true
 
-# weibo_username:     
+# weibo_username:   
+github_username:    lhondong  
 zhihu_username:     lhondong
-github_username:    lhondong
 # twitter_username:   
 # facebook_username:  
 #linkedin_username:  firstname-lastname-idxxxx

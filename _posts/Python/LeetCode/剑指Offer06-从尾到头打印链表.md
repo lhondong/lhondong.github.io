@@ -1,0 +1,73 @@
+# 剑指 Offer 06. 从尾到头打印链表
+
+## 题目
+
+输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+
+## 示例
+
+示例 1:
+
+```
+输入：head = [1,3,2]
+输出：[2,3,1]
+```
+
+## 题解
+
+### 直接反转
+
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def reversePrint(self, head):
+        """
+        :type head: ListNode
+        :rtype: List[int]
+        """
+        res = []
+        while head:
+            res.append(head.val)
+            head = head.next
+        return res[::-1]  # 或者 reverse(res)
+```
+
+- 时间复杂度：$O(n)$，reverse() 的时间复杂度为 $O(n)$，遍历了一遍数组，复杂度也为 $O(n)$。
+- 空间复杂度：$O(n)$，使用了额外的 `res`。
+
+### 递归
+
+```python
+class Solution:
+    def reversePrint(self, head: ListNode) -> List[int]:
+        if not head: return []
+        return self.reversePrint(head.next) + [head.val]
+```
+
+相当于每次都将当前的 head 加到下一个递归的末端，实现反转。
+
+- 时间复杂度：$O(n)$，递归 $n$ 次，时间间复杂度为 $O(n)$，递归函数中的操作时间复杂度为 $O(1)$，总时间复杂度为 $O(n)×O(1)=O(n)$。
+- 空间复杂度：$O(n)$，递归将占用链表长度的栈空间。
+
+### 利用栈实现反转
+
+```python
+class Solution:
+    def reversePrint(self, head: ListNode) -> List[int]:
+        stack = []
+        while head: # push
+            stack.append(head.val)
+            head = head.next
+        res = []
+        while stack: # pop
+            res.append(stack.pop())
+        return res
+```
+
+- 时间复杂度：$O(n)$，`push` 的时间复杂度为 $O(n)$，`pop` 的时间复杂度为 $O(n)$。
+- 空间复杂度：$O(n)，使用了额外的 `res` 和 `堆栈`。
