@@ -1,3 +1,15 @@
+---
+title: "LeetCode-09-回文数"
+subtitle: "LeetCode 刷题笔记"
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-12.jpg"
+mathjax: ture
+tags:
+  - LeetCode
+  - 算法
+---
+
 #
 
 ## 题目
