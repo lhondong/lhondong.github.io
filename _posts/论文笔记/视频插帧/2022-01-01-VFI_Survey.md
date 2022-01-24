@@ -14,7 +14,7 @@ tags:
 
 ## 深度学习光流算法
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/深度学习光流算法-2022-01-11-22-58-25.png" alt="深度学习光流算法-2022-01-11-22-58-25" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/深度学习光流算法-2022-01-11-22-58-25.png" alt="深度学习光流算法-2022-01-11-22-58-25" style="zoom:50%;" /></div>
 
 ## 摘要
 
@@ -39,4 +39,4 @@ Categorical distribution
 4. 基于 GAN 的方法 GAN-based methods
 5. 混合方法 hybrid methods
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VFI_Survey-2022-01-11-23-01-06.png" alt="VFI_Survey-2022-01-11-23-01-06" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VFI_Survey-2022-01-11-23-01-06.png" alt="VFI_Survey-2022-01-11-23-01-06" style="zoom:50%;" /></div>

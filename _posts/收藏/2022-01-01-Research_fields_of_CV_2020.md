@@ -20,11 +20,11 @@ tags:
 
 1. Conv+LSTM（memory based），slow fast 架构，还有两者的结合，另外还有基于光流的架构，在已知光流的情况下，通过前向 warp 或者后向 warp，能在时间维度上前后转移 featuremap，这是基本的出发点。个人其实挺喜欢光流的，因为如果不追求 end2end 的话，光流可以被用在很多地方（**当然，如果考虑时间的话，memory based 方法产生的 feature map 也可以用在其他任何地方，只是不像光流那样可以从网络里面拆出来**），当然对于特别追求精度的地方，e2e 会更好。memory based 方面的工作我个人非常推崇 google 的 looking fast and slow。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-52-37.png" alt="Research_fields_of_CV_2020-2022-01-11-20-52-37" style="zoom:30%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-52-37.png" alt="Research_fields_of_CV_2020-2022-01-11-20-52-37" style="zoom:30%;" /></div>
 
 memory 结合 slowfast，fast 的参数一般很少。架构是通用的，修改 head 它能被用在其他任何 task 上。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-53-43.png" alt="Research_fields_of_CV_2020-2022-01-11-20-53-43" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-53-43.png" alt="Research_fields_of_CV_2020-2022-01-11-20-53-43" style="zoom:50%;" /></div>
 
 slowfast 交错在一起（并且可以是异步的），能同时提高检测分割等其他各类任务的精度和速度。
 
@@ -32,7 +32,7 @@ slowfast 交错在一起（并且可以是异步的），能同时提高检测�
 2. **memory based 和 flow based 方法的结合点会非常有趣**，或者说是否可以通过 memory 去估计 flow，因为 memory 可以和 slowfast 架构结合，从而减小计算量。
 3. **3D 卷积，随着 TCN 崛起成为新的序列建模方法，时间卷积和空间卷积可以合成成为 3D 卷积**，另外 slowfast 架构里面，fast 可以看成 dilation rate 更大的时间卷积，这方面的代表工作有 C3D，I3D，TSN 等，另外不得不提 19 年的 Temporal Shift Module，它利用了时间卷积基本都是前向这个特点，用移位极大的减小了计算量。从数字图像开始，本人就是卷积的忠实粉丝，我个人热爱一切全卷积架构。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-54-07.png" alt="Research_fields_of_CV_2020-2022-01-11-20-54-07" style="zoom:30%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-54-07.png" alt="Research_fields_of_CV_2020-2022-01-11-20-54-07" style="zoom:30%;" /></div>
 
 光流可以把 feature map 在时间维度上前向后向 warp。这决定了 flow 的另一个好处，它能找到两帧计算结果之间的对应关系。flow 的缺点是计算量可能会稍大。
 
@@ -44,14 +44,14 @@ slowfast 交错在一起（并且可以是异步的），能同时提高检测�
 2. 立体匹配的话，如何解决低纹理区域处的匹配，如何和语义分割联合，如何提高计算性能。  
 立体匹配方面的在线训练模型已经出现了，就是 madnet，19 年的 CVPR oral，仔细看了一下基本没用 3D Conv，所以会不会还有改进的空间也是很有意思的，madnet 冻结一部分网络，在线训练只训练底层的几个 adaption domain。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-55-46.png" alt="Research_fields_of_CV_2020-2022-01-11-20-55-46" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-55-46.png" alt="Research_fields_of_CV_2020-2022-01-11-20-55-46" style="zoom:100%;" /></div>
 
 <center>在线训练的意思是在运行的时候训练</center>
 
 1. 3D 检测点的话，全卷积的架构，如何 fuse 不同传感器的信息，比如 fuse camera 和 lidar 点云，19 年出现真正的点云卷积，pointconv 和 kpconv，相信能为点云分割和 3D 检测带来更丰富的内容。双目的话，MSRA 今年有一篇论文，triangulation learning network，个人感觉很惊艳，使用 2D anchor 来引导 3D anchor。单目 6D 姿态估计的话，还需要补充。
 2. 3D landmark，自监督的方法，如何提高性能，代表性的工作有 learable triangulation of human pose，最惊艳的是它的 volumetric triangulation，直接将 2D heatmap 投影到 3D heatmap，然后使用 3D convnet refine heatmap，个人感觉是一个非常优的架构，但是是否还可以考虑投影 part affinity 呢，目前 part affinity 代表一个向量，投影回三维有很严重的不唯一性问题，因为从三维的一个点投影到二维，有很多可能性得到同一个向量，考虑非向量的 part affinity 是否可以，也是可以思考的。**这里我想到的是直接在二维情况下估计一个 3D 的 paf 出来，然后重投影到 volume 里，也可以估 2D 的 paf，然后重投影的时候认为 paf 的第三个分量为 1，后面再用 3D convnet refine。**
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-58-15.gif" alt="Research_fields_of_CV_2020-2022-01-11-20-58-15" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-58-15.gif" alt="Research_fields_of_CV_2020-2022-01-11-20-58-15" style="zoom:100%;" /></div>
 
 <center>重投影过程</center>
 
@@ -61,29 +61,29 @@ slowfast 交错在一起（并且可以是异步的），能同时提高检测�
 
 MSRA 的一篇论文 cross view fusion of human pose 也很惊艳，**使用 epipolar 几何来融合不同视角的 2D heatmap 达到互相改进的效果，个人感觉这一点不止可以用在 landmark 上**（凡是使用了 heatmap 的地方都可以考虑用这种方式 fuse，其实不止如此，这个方法会把一个视图里的极限上所有的 heatmap 值通过一个权重矩阵 w 加权相加到另一个视图的极线上的点，而这个矩阵本质上是全局的，可能只和对极几何相关，它是否能被用来 fuse featuremap 个人感觉是非常有意思的一件事，但是这个计算量应该会很大）。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-58-53.png" alt="Research_fields_of_CV_2020-2022-01-11-20-58-53" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-58-53.png" alt="Research_fields_of_CV_2020-2022-01-11-20-58-53" style="zoom:100%;" /></div>
 
 fuse 可能只和对极几何相关，并能够被用在其他地方，但是计算量会大很多。我跟作者交流过这个方法，可行性是有的，但是问题是参数冗余和计算量大，很明显的其实作者自己也说过，这种连接方式应该沿着极线，而不是所有像素都连接上。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-21-06-04.png" alt="Research_fields_of_CV_2020-2022-01-11-21-06-04" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-21-06-04.png" alt="Research_fields_of_CV_2020-2022-01-11-21-06-04" style="zoom:50%;" /></div>
 
 <center>fuse 只和对极几何有关</center>
 
 这里还推另一篇文章 DAVANet: Stereo Deblurring with View Aggregation，这是双目去模糊的，主要思路是使用 dispnet 提取左右视差，然后将左右 featuremap 进行 warp 然后经过 fusion layer，这里面有一点问题是，dispnet 的监督其实和其他分支是半独立的，fusion layer 里面也会考虑把这个 dispmap concat 起来。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-59-30.png" alt="Research_fields_of_CV_2020-2022-01-11-20-59-30" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-20-59-30.png" alt="Research_fields_of_CV_2020-2022-01-11-20-59-30" style="zoom:50%;" /></div>
 
 <center>先估计视差，然后利用视差进行 fusion 也许才是更合理的做法</center>
 
 dispnet 的计算量会比较大，双目特征融合还有一种方法被称为 stereo attention，主要思路就是生成两个 mask，这个 mask 表示对应视图极线上的 feature 对本视图的贡献的权重。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-21-02-56.png" alt="Research_fields_of_CV_2020-2022-01-11-21-02-56" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-21-02-56.png" alt="Research_fields_of_CV_2020-2022-01-11-21-02-56" style="zoom:100%;" /></div>
 
 关于 3D pose，另外有一篇 epipolarpose 也是自监督的，epipolarpose 使用 2D pose 和对极几何来自监督生成 3D posr。
 
 1. 三维重建的话，如何提升重建细节，是否有自监督的算法，代表性的工作有 pointmvsnet，rmvsnet。相信 meshcnn 的出现能被应用到重建里。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-21-03-20.png" alt="Research_fields_of_CV_2020-2022-01-11-21-03-20" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Research_fields_of_CV_2020-2022-01-11-21-03-20.png" alt="Research_fields_of_CV_2020-2022-01-11-21-03-20" style="zoom:50%;" /></div>
 
 另外，自监督的 mvsnet 果然已经出来了。
 

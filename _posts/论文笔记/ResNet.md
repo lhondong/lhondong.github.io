@@ -15,7 +15,7 @@
 
 层数较多的神经网络，可由较浅的神经网络和**恒等变换**网络拼接而成，如图 1 所示。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-35-01.png" alt="ResNet-2022-01-23-22-35-01" style="zoom:50%;" />
+<div align=center><div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-35-01.png" alt="ResNet-2022-01-23-22-35-01" style="zoom:50%;" /></div></div>
 
 ## 二、退化现象与对策
 
@@ -33,11 +33,11 @@ ResNet 团队把退化现象归因为深层神经网络难以实现“**恒等�
 
 按照这个思路，ResNet 团队分别构建了带有“快捷连接（Shortcut Connection）”的 ResNet 构建块、以及降采样的 ResNet 构建块，区降采样构建块的主杆分支上增加了一个 1×1 的卷积操作，见图 2。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-38-31.png" alt="ResNet-2022-01-23-22-38-31" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-38-31.png" alt="ResNet-2022-01-23-22-38-31" style="zoom:50%;" /></div>
 
 图 3 展示了 34 层 ResNet 模型的架构图，仿照 AlexNet 的 8 层网络结构，我们也将 ResNet 划分成 8 个构建层（Building Layer）。一个构建层可以包含一个或多个网络层、以及一个或多个构建块（如 ResNet 构建块）。
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-39-07.png" alt="ResNet-2022-01-23-22-39-07" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-39-07.png" alt="ResNet-2022-01-23-22-39-07" style="zoom:50%;" /></div>
 
 第一个构建层，由1个普通卷积层和最大池化层构建。
 
@@ -59,11 +59,11 @@ ResNet 团队把退化现象归因为深层神经网络难以实现“**恒等�
 
 ### 网络退化问题的解决
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-41-47.png" alt="ResNet-2022-01-23-22-41-47" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-41-47.png" alt="ResNet-2022-01-23-22-41-47" style="zoom:50%;" /></div>
 
 我们发现，假设该层是冗余的，在引入 ResNet 之前，我们想让该层学习到的参数能够满足 $h(x)=x$，即输入是 $x$，经过该冗余层后，输出仍然为 x。但是可以看见，要想学习 $h(x)=x$ 恒等映射时的这层参数时比较困难的。ResNet 想到避免去学习该层恒等映射的参数，使用了如上图的结构，让 $h(x)=F(x)+x$; 这里的 $F(x)$ 我们称作残差项，我们发现，要想让该冗余层能够恒等映射，我们只需要学习 $F(x)=0$。学习 $F(x)=0$ 比学习 $h(x)=x$ 要简单，因为一般每层网络中的参数初始化偏向于 0，这样在相比于更新该网络层的参数来学习 $h(x)=x$，该冗余层学习 $F(x)=0$ 的更新参数能够更快收敛，如图所示：
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-43-35.png" alt="ResNet-2022-01-23-22-43-35" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/ResNet-2022-01-23-22-43-35.png" alt="ResNet-2022-01-23-22-43-35" style="zoom:100%;" /></div>
 
 假设该曾网络只经过线性变换，没有 bias 也没有激活函数。我们发现因为随机初始化权重一般偏向于 0，那么经过该网络的输出值为 [0.6 0.6]，很明显会更接近与 [0 0]，而不是 [2 1]，相比与学习 $h(x)=x$，模型要更快到学习 $F(x)=0$。
 

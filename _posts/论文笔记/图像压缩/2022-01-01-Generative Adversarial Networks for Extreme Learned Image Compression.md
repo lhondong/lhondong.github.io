@@ -44,7 +44,7 @@ ETH Zürich
 
 GC 模式的基本结构和流程如下：
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-03-57.png" alt="Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-03-57" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-03-57.png" alt="Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-03-57" style="zoom:50%;" /></div>
 
 流程：输入 → 编码器 → 量化 → 解码器 → 输出
 
@@ -65,7 +65,7 @@ GC 模式的基本结构和流程如下：
 
 选择生成模型的网络框架如下图所示：
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-04-58.png" alt="Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-04-58" style="zoom:50%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-04-58.png" alt="Generative Adversarial Networks for Extreme Learned Image Compression-2022-01-12-00-04-58" style="zoom:50%;" /></div>
 
 其中图像编码器 E(Image encoder)，语义图编码器 (Semantic label map encoder) 以及解码器 (Generator/decoder) 的具体结构如下：
 

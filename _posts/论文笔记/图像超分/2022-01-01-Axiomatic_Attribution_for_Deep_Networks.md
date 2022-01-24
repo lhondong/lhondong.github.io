@@ -204,8 +204,8 @@ if __name__ == '__main__':
 
 在m=10时，分别是原图，gradients和integrated gradients方法：
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-46.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-46" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-46.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-46" style="zoom:100%;" /></div>
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-59.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-59" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-59.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-59" style="zoom:100%;" /></div>
 
-<img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-29-11.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-29-11" style="zoom:100%;" />
+<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-29-11.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-29-11" style="zoom:100%;" /></div>

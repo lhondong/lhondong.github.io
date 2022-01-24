@@ -1,5 +1,5 @@
 ---
-title: "LeetCode-09-回文数"
+title: ""
 subtitle: "LeetCode 刷题笔记"
 layout: post
 author: "L Hondong"
