@@ -1,0 +1,84 @@
+---
+title: "剑指 Offer 46. 把数字翻译成字符串"
+subtitle: "LeetCode 刷题笔记"
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-12.jpg"
+mathjax: ture
+tags:
+  - LeetCode
+  - 算法
+---
+
+# 剑指 Offer 46. 把数字翻译成字符串
+
+## 题目
+
+给定一个数字，我们按照如下规则把它翻译为字符串：0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，……，25 翻译成 “z”。一个数字可能有多个翻译。请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+
+## 示例
+
+示例 1:
+
+```
+输入: 12258
+输出: 5
+解释: 12258有5种不同的翻译，分别是"bccfi", "bwfi", "bczi", "mcfi"和"mzi"
+```
+
+## 题解
+
+```python
+class Solution(object):
+    def translateNum(self, num):
+        """
+        :type num: int
+        :rtype: int
+        """
+        list = []
+        while num:
+            list.append(num % 10)
+            num = num // 10
+        list = list[: : -1]
+        dp = [1, 1]
+        for i in range(2, len(list)+1):
+            if 10 <= list[i-2] * 10 + list[i-1] <= 25:
+                dp.append(dp[i-1]+dp[i-2])
+            else: dp.append(dp[i-1])
+        return dp[len(list)]
+```
+
+## 题解
+
+记数字 num 第 i 位数字为 $x_i$，数字 num 的位数为 n；例如：num=12258 的 n=5 , $x_1=1$。
+
+- 状态定义：设动态规划列表 dp ，dp[i] 代表以 xi 为结尾的数字的翻译方案数量。
+- 转移方程：若 xi 和 xi−1 组成的两位数字可以被翻译，则 dp[i]=dp[i−1]+dp[i−2]；否则 dp[i]=dp[i−1]。
+  - 可被翻译的两位数区间：当 xi−1=0 时，组成的两位数是无法被翻译的（例如 00,01,02,⋯ ），因此区间为 [10,25]。
+- 初始状态：dp[0]=dp[1]=1 ，即 “无数字” 和 “第 1 位数字” 的翻译方法数量均为 1；
+- 返回值：dp[n] ，即此数字的翻译方案数量。
+
+$$dp[i]= \begin{cases}d p[i-1]+d p[i-2] & 10 x_{i-1}+x_{i} \in[10,25] \\ d p[i-1] & 10 x_{i-1}+x_{i} \in[0,10) \cup(25,99]\end{cases}$$
+
+Q：无数字情况 dp[0]=1 从何而来？
+
+A：当 num 第 1,2 位的组成的数字 ∈[10,25] 时，显然应有 2 种翻译方法，即 dp[2]=dp[1]+dp[0]=2 ，而显然 dp[1]=1 ，因此推出 dp[0]=1 。
+
+## 笔记
+
+这里初始化 dp 为 [1,1]，最后返回的是 dp[len(list)]，num=Null 时，返回 dp[0] = 1，num 时，返回 dp[1] = 1，num 有两位时，返回 dp[2] = dp[0]+dp[1] 或者 dp[1]。
+
+简化：
+
+```python
+class Solution:
+    def translateNum(self, num: int) -> int:
+        a = b = 1
+        y = num % 10
+        while num != 0:
+            num //= 10
+            x = num % 10
+            a, b = (a + b if 10 <= 10 * x + y <= 25 else a), a
+            y = x
+        return a
+```

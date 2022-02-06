@@ -1,0 +1,48 @@
+Softmax 损失函数的求导推导
+
+通过最大似然和交叉熵都可以推出 softmax 的损失函数为：
+
+$$L = -\sum\limits_{i=1}^m y_i \log(\hat y_i)$$
+
+其中，
+
+$$ \hat y_i = \frac{e^{z_i}}{\sum\limits_{j=1}^ne^{z_j}}$$
+
+$$ z_i=\theta_i^T \cdot x$$
+
+这里只求到 $\frac{\partial L}{\partial z_i}$。
+
+需要注意的是，虽然 L 是一个求和，但因为 $y_i$ 只有一个为 1，所以其实只有一项不为 0，在求导数时要牢记这一点。为了把多种情况综合起来写成一个表达式结果搞得后面的求导特别不好理解。
+
+第一步，求 $\frac{\partial L}{\partial \hat y_i}$，假如 $y_k = 1$ 那么就只有 $\frac{\partial L}{\partial \hat y_k}$ 不为 0，其他所有 $\frac{\partial L}{\partial \hat y_i}$ 都等于 0，所以只需要求 $\frac{\partial L}{\partial \hat y_k}$：
+
+$$\frac{\partial L}{\partial \hat y_k}=-\frac{1}{\hat y_k}$$
+
+第二步，求 $\frac{\partial \hat y_k}{\partial z_i}$，这里要分两种情况：
+
+1. $i=k$ 时，其实就是求 $\frac{\partial \hat y_k}{\partial z_k}$ 
+
+此时有：
+
+$$\frac{\partial \hat y_k}{\partial z_k} = \frac{e^{z_k}\sum\limits_{j=1}^n e^{z_j}-(e^{z_k})^2}{(\sum\limits_{j=1}^n e^{z_j})^2} = \hat y_k -(\hat y_k)^2 $$
+
+2. $i\neq k$ 时：
+
+$$\frac{\partial \hat y_k}{\partial z_i} = - \frac{e^{z_k}e^{z_i}}{(\sum\limits_{j=1}^n e^{z_j})^2} = -\hat y_k \hat y_i $$
+
+
+第三步，求 $\frac{\partial L}{\partial z_i}$，根据链式法则把第一步第二步的结果乘起来，由于第二步有两种情况，所以也要分两种情况：
+
+1. $y_k =1$ 的情况：
+
+$$\frac{\partial L}{\partial \hat y_k}\frac{\partial \hat y_k}{\partial z_i}=-\frac{1}{\hat y_k}(-\hat y_k -(\hat y_k)^2) = -1 + \hat y_k$$
+
+2. 其他的 $y_i=0$ 的情况：
+
+$$\frac{\partial L}{\partial \hat y_k}\frac{\partial \hat y_k}{\partial z_i}=-\frac{1}{\hat y_k}(-\hat y_k \hat y_i) = \hat y_i$$
+
+这两个式子综合起来可以写成：
+
+$$\frac{\partial L}{\partial z_k} = - y_i + \hat y _i$$
+
+可见如果 $y_k =1$ 的时候，就是第一个式子，$y_i=0$ 的时候，就是第二个式子。
