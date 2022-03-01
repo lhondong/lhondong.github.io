@@ -211,7 +211,7 @@ GAN 初期的发展由于其生成图像类型单一，模型训练难度大，�
 
 均方误差 (Mean Square Error，MSE)[49]，是计算两幅相同尺寸图像像素之间的方差平方和，如式 (1) 所示。其中 $M$ 和 $N$ 分别表示图像的长与宽，$I(x,y)$ 和 $I\prime (x,y)$ 分别表示待评价图像与原始图像，$I(x,y)$ 表示在 $(x,y)$ 位置的像素值。MSE 是最简单的图像评价方式，但是这只能说明两幅图像的差异，它不会考虑到图像高频像素和低频像素分量，而图像压缩就是需要能更大程度上保留和恢复低频像素，因此该方法不为常用。
 
-$MSE = \frac{1}{MN} \sum \limits_{y=1}^{M} \sum \limits_{x=1}^{N} \left[ I(x,y)-I\prime(x,y) \right]$
+$MSE = \frac{1}{MN} \sum \limits_{y=1}^{M} \sum \limits_{x=1}^{N} \left[ I(x,y)-I'(x,y) \right]$
 
 - [49] Eskicioglu A M，Fisher P S.Image quality measures and their performance[J].IEEE Transactions on Communications，1995，43:2959-2965.
 

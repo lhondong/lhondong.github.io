@@ -193,11 +193,9 @@ M&S：Mean&Scale (M&S) Hyperprior，和我们的概率模型 P 有着相同的�
 
 生成视频压缩是一个非常有趣的方向。为确保时间一致性，可借鉴增强平滑度的机制，例如，基于 GAN 的视频超分辨率模型。
 
-## 六、思考
-
 ## 实现
 
-[github 地址](https://github.com/Justin-Tan/high-fidelity-generative-compression)
+[Github 地址](https://github.com/Justin-Tan/high-fidelity-generative-compression)
 
 This repository defines a model for learnable image compression capable of compressing images of arbitrary size and resolution based on the paper "High-Fidelity Generative Image Compression" (HIFIC) by Mentzer et. al..
 

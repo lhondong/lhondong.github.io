@@ -107,8 +107,6 @@ RI 模式适合大部分使用情况；而 RB 模式对生成器会造成更多�
 
 ## 五、总结
 
-## 六、思考
-
 ## 参考文献
 
 - Ting-Chun Wang, Ming-Yu Liu, Jun-Yan Zhu, Andrew Tao, Jan Kautz, and Bryan Catanzaro. High resolution image synthesis and semantic manipulation with conditional gans. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2018.
