@@ -22,7 +22,7 @@ MIT HAN SONG, Adobe Research, Shanghai Jiao Tong University
 
 强大的生成能力是以高强度计算为代价的，**cGANs 所需算力比图像识别领域的 CNNs 高出 1-2 个数量级**。比如，MobileNetv3 处理每张图片只需要 0.4G MACs，而 GauGAN 需要 281G MACs，相差数百倍。下图展示了几种算法的模型参数和算力的比较：
 
-<div align=center><img src="/Assets/Images/GAN Compression-2022-01-12-10-30-41.png" alt="GAN Compression-2022-01-12-10-30-41" style="zoom:30%;" /></div>
+<div align=center><img src="/images/GAN Compression-2022-01-12-10-30-41.png" alt="GAN Compression-2022-01-12-10-30-41" style="zoom:30%;" /></div>
 
 对于 cGANs 相关的图像生成应用来说，**需要在低延迟的设备上运行才能保证人机交互时的流畅性**。然而，类似于手机和平板的设备往往受限于内存和电池，这对于应用程序的普及是非常不利的。 
 
@@ -57,7 +57,7 @@ GAN compression 方法可以应用于各种条件 GAN 模型，不受模型结�
 
 **右上部分是通过训练获得的多个子生成器 sub-generators，通过右下部分的选择评估获取最终的最优子生成器**。
 
-<div align=center><img src="/Assets/Images/GAN Compression-2022-01-12-10-32-27.png" alt="GAN Compression-2022-01-12-10-32-27" style="zoom:50%;" /></div>
+<div align=center><img src="/images/GAN Compression-2022-01-12-10-32-27.png" alt="GAN Compression-2022-01-12-10-32-27" style="zoom:50%;" /></div>
 
 #### 目标函数
 
@@ -163,4 +163,4 @@ map——arial photo；
 
 下表展示了提出算法的压缩性能，**模型参数数量压缩的倍数在 1/5 到 1/33 之间，算力压缩在 1/4 到 1/22 之间**，将 CycleGAN 生成器的计算量减少 21.2 倍，远远优于基准算法的表现：
 
-<div align=center><img src="/Assets/Images/GAN Compression-2022-01-12-10-36-06.png" alt="GAN Compression-2022-01-12-10-36-06" style="zoom:50%;" /></div>
+<div align=center><img src="/images/GAN Compression-2022-01-12-10-36-06.png" alt="GAN Compression-2022-01-12-10-36-06" style="zoom:50%;" /></div>

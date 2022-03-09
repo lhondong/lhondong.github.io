@@ -85,7 +85,7 @@ $$
 p(x)=p(x_1)p(x_2\mid x_1)···p(x_i\mid x_1,...,x_{i−1})···p(x_{m×n}\mid x_1,...,x_{m×n−1})
 $$
 
-<div align=center><img src="/Assets/Images/Video_Coding_Survey-2022-01-12-11-15-31.png" alt="Video_Coding_Survey-2022-01-12-11-15-31" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Video_Coding_Survey-2022-01-12-11-15-31.png" alt="Video_Coding_Survey-2022-01-12-11-15-31" style="zoom:50%;" /></div>
 
 $x_i$ 的条件可以叫做上下文。这里有个问题，就是如果图像很大，那么这个概率就很难估计出来，有一种简单的方法是缩短上下文的范围，假设 k 是预先选择的常数：
 
@@ -148,7 +148,7 @@ $$
 2. 有损编码的目的是要在比特率和质量之间得到一个比较好的平衡，因此训练网络的时候需要考虑比特率因素，但是比特率是一个不好计算跟评估的指标；
 3. 一个真正实用的编解码器，还需要考虑可变的码率、可扩展、编解码速度、互操作等，是一个复杂的问题。
 
-<div align=center><img src="/Assets/Images/Video_Coding_Survey-2022-01-12-11-17-36.png" alt="Video_Coding_Survey-2022-01-12-11-17-36" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Video_Coding_Survey-2022-01-12-11-17-36.png" alt="Video_Coding_Survey-2022-01-12-11-17-36" style="zoom:50%;" /></div>
 
 - 原始图像 x 转换成 $y=g_a(x)$，然后对 y 做量化和编码；
 - 解码后的 $\hat{y}$ 逆变换成 $\hat{x}=g_s(\hat{y})$；
@@ -281,7 +281,7 @@ review 一下一些用深度网络做传统编码方案中的工具或者是跟�
 
 但其实，上面图中那么多的模块，都可以用深度网络来做的。下面根据深度工具在编码中的不同的应用位置来回顾一下深度工具的代表性工作。
 
-<div align=center><img src="/Assets/Images/Video_Coding_Survey-2022-01-12-11-20-13.png" alt="Video_Coding_Survey-2022-01-12-11-20-13" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Video_Coding_Survey-2022-01-12-11-20-13.png" alt="Video_Coding_Survey-2022-01-12-11-20-13" style="zoom:50%;" /></div>
 
 传统混合视频编码方案以及方案中深度学习工具的位置示意图。黄线表示预测流，蓝框表示仅在编码器侧使用的工具。
 
@@ -289,7 +289,7 @@ review 一下一些用深度网络做传统编码方案中的工具或者是跟�
 
 帧内预测，是一种在同一图片内的块之间预测的工具。H.264 引入了具有多种预定义预测模式的帧内预测，例如 DC 预测和沿不同方向的推理。编码器则可以为每一个块选择一种预测模式，并将这个预测模型告知解码器。至于这个模式是怎么确定的，也很简单，就是选择率失真最小的模式。而 HEVC 里面，就更进一步，引入了更多的预测模式。
 
-<div align=center><img src="/Assets/Images/Video_Coding_Survey-2022-01-12-11-20-46.png" alt="Video_Coding_Survey-2022-01-12-11-20-46" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Video_Coding_Survey-2022-01-12-11-20-46.png" alt="Video_Coding_Survey-2022-01-12-11-20-46" style="zoom:50%;" /></div>
 
 - Li，提出了如上图所示的用于帧内预测的全连接网络。对于当前的 $N × N$  块，使用上方的 $L$ 行和左侧的 $L$ 列，总共 $4NL+L^2$ 个像素作为前后文。并用 New York City Library 的图像集做训练，原始图像以不同的量化参数进行压缩。还研究了两种不同的策略：第一种是用所有训练数据训练一个模型；第二种是考虑 HEVC 预测模式，将训练数据分成两组，分别训练两个模型。实验证明两个模型的策略更加适合压缩。这个方案的 BD 率比 HM 低 3%左右。
 - Pfaff，也是用全连接网络做帧内预测，但是用的是多个网络训练为不同的预测模式。他们还提出要额外训练一个网络，输入一样是块的前后文，但是输出是不同模式的预测可能性。他们还提出对于不同的预测模型，要使用不同的变换。这个方案的 BD 率比具有高级块分区的 HM 低 6%左右。

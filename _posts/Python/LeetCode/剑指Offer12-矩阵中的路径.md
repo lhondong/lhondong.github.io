@@ -20,7 +20,7 @@ tags:
 
 例如，在下面的 3×4 的矩阵中包含单词 "ABCCED"（单词中的字母已标出）。
 
-<div align=center><img src="/Assets/Images/剑指Offer12-矩阵中的路径-2022-01-30-20-37-55.png" alt="剑指Offer12-矩阵中的路径-2022-01-30-20-37-55" style="zoom:50%;" /></div>
+<div align=center><img src="/images/剑指Offer12-矩阵中的路径-2022-01-30-20-37-55.png" alt="剑指Offer12-矩阵中的路径-2022-01-30-20-37-55" style="zoom:50%;" /></div>
 
 ## 示例
 
@@ -70,7 +70,7 @@ class Solution(object):
 - 深度优先搜索：可以理解为暴力法遍历矩阵中所有字符串可能性。DFS 通过递归，先朝一个方向搜到底，再回溯至上个节点，沿另一个方向搜索，以此类推。
 - 剪枝：在搜索中，遇到**这条路不可能和目标字符串匹配成功**的情况（例如：此矩阵元素和目标字符不同、此元素已被访问），则应立即返回，称之为**可行性剪枝**。
 
-<div align=center><img src="/Assets/Images/剑指Offer12-矩阵中的路径-2022-01-30-20-42-32.png" alt="剑指Offer12-矩阵中的路径-2022-01-30-20-42-32" style="zoom:50%;" /></div>
+<div align=center><img src="/images/剑指Offer12-矩阵中的路径-2022-01-30-20-42-32.png" alt="剑指Offer12-矩阵中的路径-2022-01-30-20-42-32" style="zoom:50%;" /></div>
 
 ### DFS 解析
 

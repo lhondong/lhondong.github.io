@@ -137,7 +137,7 @@ $$
 
 ### 3.3 Architecture
 
-<div align=center><img src="/Assets/Images/High-Fidelity Generative Image Compressi-2022-01-12-00-05-26.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-05-26" style="zoom:50%;" /></div>
+<div align=center><img src="/images/High-Fidelity Generative Image Compressi-2022-01-12-00-05-26.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-05-26" style="zoom:50%;" /></div>
 
 包括 encoder E, generator G, discriminator D 和 probability model P（hyper-prior model）。
 
@@ -173,15 +173,15 @@ M&S：Mean&Scale (M&S) Hyperprior，和我们的概率模型 P 有着相同的�
 
 #### Distortion-perception trade-off
 
-<div align=center><img src="/Assets/Images/High-Fidelity Generative Image Compressi-2022-01-12-00-05-37.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-05-37" style="zoom:50%;" /></div>
+<div align=center><img src="/images/High-Fidelity Generative Image Compressi-2022-01-12-00-05-37.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-05-37" style="zoom:50%;" /></div>
 
 #### 率失真：
 
-<div align=center><img src="/Assets/Images/High-Fidelity Generative Image Compressi-2022-01-12-00-05-49.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-05-49" style="zoom:50%;" /></div>
+<div align=center><img src="/images/High-Fidelity Generative Image Compressi-2022-01-12-00-05-49.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-05-49" style="zoom:50%;" /></div>
 
 #### 感知质量：
 
-<div align=center><img src="/Assets/Images/High-Fidelity Generative Image Compressi-2022-01-12-00-06-00.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-06-00" style="zoom:50%;" /></div>
+<div align=center><img src="/images/High-Fidelity Generative Image Compressi-2022-01-12-00-06-00.png" alt="High-Fidelity Generative Image Compressi-2022-01-12-00-06-00" style="zoom:50%;" /></div>
 
 ## 五、总结
 

@@ -26,7 +26,7 @@ tags:
 
 深度学习模型性能提高的同时伴随着其计算越来越复杂，计算开销和内存需求逐渐增加。仅 8 层的 AlexNet[4] 需要 0.61 亿个网络参数和 7.29 亿次浮点型计算，花费约 233MB 内存；随后的 VGG-16[5] 的网络参数达到 1.38 亿，浮点型计算次数为 1.56 亿，需要约 553MB 内存；为了克服深层网络的梯度消失问题，Kaiming He 提出 ResNet[6] 网络，首次在 ILSVRC 比赛 [3] 实现低于 5%的 top-5 分类错误，偏浅的 ResNet-50 网络参数就达到 0.25 亿，浮点型计算次数高达 3.9 亿，内存花费约 102MB。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-42-05.png" alt="Model_Compression_Survey-2022-01-12-09-42-05" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-42-05.png" alt="Model_Compression_Survey-2022-01-12-09-42-05" style="zoom:50%;" /></div>
 
 庞大的网络参数意味着更大的内存存储，而增长的浮点型计算次数意味着训练成本和计算时间的增长，这极大限制了在资源受限设备例如智能手机、智能手环等的部署。如表 1 所示，深度模型在 Samsung Galaxy S6 的推理时间远超 Titan X 桌面级显卡，实时性较差，无法满足实际应用需要。
 
@@ -72,7 +72,7 @@ LeCun 在上世纪 80 年代末提出的 OBD (optimal brain damage) 算法 [19] 
 
 如图 3 所示，卷积层和全连接层的输入与输出之间都存在稠密的连接，对神经元之间的连接的重要性设计评价准则，删除冗余连接可起到模型压缩的目的。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-42-51.png" alt="Model_Compression_Survey-2022-01-12-09-42-51" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-42-51.png" alt="Model_Compression_Survey-2022-01-12-09-42-51" style="zoom:50%;" /></div>
 
 - Han 等人 [23] 提出根据神经元连接权值的范数值大小，删除范数值小于指定阈值的连接，重新训练恢复性能。
 - 为了避免错误删除重要连接，Guo 等人 [24] 提出 DNS(Dynamic Network Surgery) 方法，恢复被误删除的重要连接。
@@ -81,7 +81,7 @@ LeCun 在上世纪 80 年代末提出的 OBD (optimal brain damage) 算法 [19] 
 
 除了神经元之间的连接进行评估，也可以如图 4 所示，直接对神经元权重进行评估，相比原始权重，3 个 filter 各自进行权重置零操作（即删去某几个小方块），置零的神经元可能各不相同。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-44-22.png" alt="Model_Compression_Survey-2022-01-12-09-44-22" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-44-22.png" alt="Model_Compression_Survey-2022-01-12-09-44-22" style="zoom:50%;" /></div>
 
 - 行列式点过程 (determinantal point process, DPP)[27] 常用来解决机器学习中的子集选择问题，Mariet 等人 [28] 将 DPP 应用于神经元的选择，再通过重新加权将删除神经元的信息直接融合到剩余神经元中，这种方法不需要再微调模型。
 - 受 Kingma 等人提出的变分 dropout 技术 [29] 的启发，Molchanov 等人 [30] 将其用于模型压缩，同时对卷积层和全连接层进行稀疏化。
@@ -214,7 +214,7 @@ $$
 
 参数数量庞大时，可利用聚类方式进行权重量化。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-46-43.png" alt="Model_Compression_Survey-2022-01-12-09-46-43" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-46-43.png" alt="Model_Compression_Survey-2022-01-12-09-46-43" style="zoom:50%;" /></div>
 
 - Gong 等人 [70] 最早提出将 k-means 聚类用于量化全连接层参数，如图 5 所示，对原始权重聚类形成码本，为权值分配码本中的索引，所以只需存储码本和索引，不再需要存储原始权重信息。
 - Wu 等人 [71] 将 k-means 聚类拓展到卷积层，将权值矩阵划分成很多块，再通过聚类获得码本，并提出一种有效的训练方案抑制量化后的多层累积误差。
@@ -235,7 +235,7 @@ $$
 
 除了权重和激活值，研究者们将梯度和误差也作为可优化的因素。这些同时考虑权重、激活值、梯度和误差的方法的量化位数和特点对比见表 4。表中的 W,A,G 和 E 分别代表权重、激活值、梯度和误差。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-48-04.png" alt="Model_Compression_Survey-2022-01-12-09-48-04" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-48-04.png" alt="Model_Compression_Survey-2022-01-12-09-48-04" style="zoom:50%;" /></div>
 
 ##### 自主确定
 
@@ -370,7 +370,7 @@ $$
 
 与其他压缩与加速方法只使用需要被压缩的目标网络不同，知识蒸馏法需要两种类型的网络，教师模型和学生模型。预先训练好的教师模型通常是一个大型的神经网络模型，具有很好的性能。如图 6 所示，将教师模型的 softmax 层输出作为 soft target 与学生模型的 softmax 层输出作为 hard target 一同送入 total loss 计算，指导学生模型训练，将教师模型的知识迁移到学生模型中，使学生模型达到与教师模型相当的性能。学生模型更加紧凑 高效，起到模型压缩的目的。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-49-42.png" alt="Model_Compression_Survey-2022-01-12-09-49-42" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-49-42.png" alt="Model_Compression_Survey-2022-01-12-09-49-42" style="zoom:50%;" /></div>
 
 知识蒸馏法能使深层网络变浅，大大降低计算成本，但也有其局限性。由于使用 softmax 层输出作为知识，所以一般多用于具有 softmax 损失函数的分类任务，在其它任务的泛化性不好；并且就目前来看，其压缩比与蒸馏后的模型性能还存在较大进步空间。
 
@@ -426,7 +426,7 @@ $$
 - 如图 7 所示，Han 等人 [167] 提出 Deep Compression，将参数剪枝、参数量化和哈夫曼编码结合，达到很好的压缩效果，并在其基础上考虑到软硬件的协同压缩设计，提出 Efficient Inference Engine (Eie) 框架 [168]。
 - Dubey 等人 [169] 同样利用这三种方法的组合进行网络压缩。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-10-29-11.png" alt="Model_Compression_Survey-2022-01-12-10-29-11" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-10-29-11.png" alt="Model_Compression_Survey-2022-01-12-10-29-11" style="zoom:50%;" /></div>
 
 #### 组合参数剪枝和参数共享
 
@@ -447,35 +447,35 @@ $$
 
 表 5 展示了参数剪枝、紧凑网络、参数共享、知识蒸馏和混合方式五类压缩技术的一些代表性方法使用 MNIST 数据集在 LeNet-5 上的压缩效果，可以看出除了 [157] 造成较大的 accuracy 损失，其他方法的压缩效果都不错，从 accuracy 角度，自适应 fastfood 变换 [115] 效果更好，在达到压缩效果的同时提升 accuracy；从参数压缩量角度，混合方式在 accuracy 轻微下降的情况下都实现了较大压缩比，其中 [169] 效果最好。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-50-47.png" alt="Model_Compression_Survey-2022-01-12-09-50-47" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-50-47.png" alt="Model_Compression_Survey-2022-01-12-09-50-47" style="zoom:50%;" /></div>
 
 表 6 展示了参数剪枝、紧凑网络、参数共享和混合方式四类压缩技术的一些代表性方法使用 CIFAR-10 数据集在 VGG-16 上的压缩效果，可以看出这四类方法的压缩效果差别比较大。整体来看，结构化剪枝 [40] 效果更好，同时起到网络压缩和加速的效果，accuracy 甚至有些提升。权值随机编码方法 [121] 能实现高达 159x 的参数压缩比，accuracy 略有下降。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-50-56.png" alt="Model_Compression_Survey-2022-01-12-09-50-56" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-50-56.png" alt="Model_Compression_Survey-2022-01-12-09-50-56" style="zoom:50%;" /></div>
 
 表 7 展示了参数剪枝、紧凑网络、低秩分解、参数共享和混合方式五类压缩技术的一些代表性方法使用 ImageNet 数据集在 AlexNet 上的压缩效果。整体来看，五类方法达到的压缩效果和加速效果比较均衡，accuracy 都略有下降。其中参数剪枝和混合方式能实现更大的压缩比，但低秩分解的加速效果更好。另两类方法都有不同程度的 accuracy 下降。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-51-11.png" alt="Model_Compression_Survey-2022-01-12-09-51-11" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-51-11.png" alt="Model_Compression_Survey-2022-01-12-09-51-11" style="zoom:50%;" /></div>
 
 表 8 展示了参数剪枝、低秩分解、参数共享和混合方式四类压缩技术的一些代表性方法在使用 ImageNet 数据集在 VGG-16 上的压缩效果。整体的压缩与加速效果都很明显，其中剪枝方法的 accuracy 有略微提升，混合方式达到的压缩比最高，另外两类方法虽然 accuracy 有下降，但加速效果更优秀。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-51-28.png" alt="Model_Compression_Survey-2022-01-12-09-51-28" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-51-28.png" alt="Model_Compression_Survey-2022-01-12-09-51-28" style="zoom:50%;" /></div>
 
 表 9 展示了参数剪枝、紧凑网络、参数共享和混合方式四类压缩技术的一些代表性方法在使用 ImageNet 数据集在 ResNet-50 上的压缩效果。整体来看，accuracy 下降趋势比较明显，压缩与加速效果不如其他网络在 ImageNet 上好。其中混合方式压缩效果最好，[169] 达到 15.8x 的压缩比，而参数共享法中循环矩阵 [111] 达到最高加速比 5.82x。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-51-36.png" alt="Model_Compression_Survey-2022-01-12-09-51-36" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-51-36.png" alt="Model_Compression_Survey-2022-01-12-09-51-36" style="zoom:50%;" /></div>
 
 表 10 展示了一些主流量化技术使用 ImageNet 数据集在 AlexNet 上的压缩效果，其中 weight bits 为 1 表示 二值化网络，weight bits 为 2 时表示三值化网络，除此之外还有一些特殊位宽。其中 [89] 的 3{±2}表示权值从{0，±1,±2}中选择，3{±2 ±4}表示权值从{0,±1,±2,±4}中选择。XNOR-Net[63] 虽然能达到比较好的压缩性能，但 accuracy 损失太大。SYQ[85] 在实现权重二值化、三值化的同时将激活值也量化到 8 位，accuracy 几乎没有损失，略有提升。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-57-30.png" alt="Model_Compression_Survey-2022-01-12-09-57-30" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-57-30.png" alt="Model_Compression_Survey-2022-01-12-09-57-30" style="zoom:50%;" /></div>
 
 表 11 展示了一些主流量化技术使用 ImageNet 数据集在 ResNet-18 上的压缩效果。整体来看，accuracy 的下降程度更大，对权值和激活值的大尺度量化造成不同程度的精度损失，SLQ[73] 和 INQ[87] 将权值量化到 5 位，accuracy 略有提升。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-57-50.png" alt="Model_Compression_Survey-2022-01-12-09-57-50" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-57-50.png" alt="Model_Compression_Survey-2022-01-12-09-57-50" style="zoom:50%;" /></div>
 
 表 12 展示了一些有代表性的知识蒸馏方法在 MNIST、CIFAR-10、CIFAR-100 和 ImageNet 数据集上的压缩效果。由于使用的教师模型和学生模型的网络结构不同，所以我们将两个模型的 accuracy 和参数数量都展示出来，方便读者对比。可以看出，相比其他方法，知识蒸馏的模型 accuracy 下降更多，压缩比更小。目前来看，未来知识蒸馏在模型压缩与加速领域还有很大发展空间。
 
-<div align=center><img src="/Assets/Images/Model_Compression_Survey-2022-01-12-09-58-02.png" alt="Model_Compression_Survey-2022-01-12-09-58-02" style="zoom:50%;" /></div>
+<div align=center><img src="/images/Model_Compression_Survey-2022-01-12-09-58-02.png" alt="Model_Compression_Survey-2022-01-12-09-58-02" style="zoom:50%;" /></div>
 
 结论：我们总结的 7 类压缩与加速方法各有利弊，由于实验使用的硬件平台不同，并不能量化地确定孰优孰劣。依据不同的应用场景和现实需要，可以进行方法的选取。例如对于存储有限的嵌入式设备，可以使用非结构化剪枝或者二值、三值量化，大幅减少模型占用的内存大小。对于没有预训练模型的情况，可以考虑紧凑网络法，直接训练网络。对于期望较高压缩比与加速比的应用场景，可以使用混合方式，组合使用几种压缩与加速方法。
 
