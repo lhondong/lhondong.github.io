@@ -15,4 +15,4 @@ Swin Transformer 提出了一种针对视觉任务的通用的 Transformer 架�
 1. 边界像素点不能使用 patch 范围之外的邻接像素来做图像复原。
 2. 复原后的图像中容易在 patch 周围引入边界伪影。虽然这个问题可以通过 patch 交叠来减轻，但是这会引入额外的计算负担。
 
-由于结合了 CNN 和 Transformer 的优势，SwinTransformer 展现出了巨大的优势。一方面，由于局部注意力机制，SwinTransformer 具有 CNN 处理大尺寸图像的优势。另一方面，由于 shiftd window 机制，它又具有 Transformer 对长依赖建模的能力。
+由于结合了 CNN 和 Transformer 的优势，Swin Transformer 展现出了巨大的优势。一方面，由于局部注意力机制，SwinTransformer 具有 CNN 处理大尺寸图像的优势。另一方面，由于 shiftd window 机制，它又具有 Transformer 对长依赖建模的能力。

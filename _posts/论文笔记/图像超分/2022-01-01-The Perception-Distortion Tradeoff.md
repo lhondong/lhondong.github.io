@@ -33,7 +33,7 @@ SR 问题，对于算法的评估主要是分为两类，一类是是像素维�
 
 作者证明了 perception 和 distortion 之间存在下面这样的一条曲线，并且左下角的区域是任何算法都无法达到的。一些一味注重优化 distortion 的算法可能既不有效又损害视觉质量（在曲线的右上方区域），说明了 GAN 方法的有效性（去逼近这个 bound）。对于不同的领域应该有不同的侧重点，比如对于医学领域可能会更注重 distortion accuracy，即与原图像的接近程度。这个图像也指导给出了一个新的衡量算法的方法，将算法的表现绘制到该坐标轴上（同时考虑 perceptual quality 和 distortion）。 
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-34-01.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-01" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-34-01.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-01" style="zoom:50%;" /></div>
 
 ### 1.1 Motivation
 
@@ -55,7 +55,7 @@ SR 问题，对于算法的评估主要是分为两类，一类是是像素维�
 
 ## 三、问题定义
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-34-25.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-25" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-34-25.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-25" style="zoom:50%;" /></div>
 
 实际上自然图像可以看做是自然图像 $p(X)$ 的自然分布的一个实现，可以把失真后的图像 $y$ 看成是给定原图像 $x$ 在条件分布 $p(Y\mid X)$ 下产生的结果，失真后还原的图像 $x’$ 可以看成 $y$ 在条件分布 $p(X\mid Y)$ 产生的结果。失真的公式可以表示如下： 
 
@@ -73,7 +73,7 @@ $$
 
 这里论文主要使用了两种失真方式去衡量图像失真。一种是均方误差失真（MMSE），另外一种是 0-1 失真（MAP）。$x$ 的原始分布是 $\{-1,0,1\}$ 时，前者导致产生的结果是连续的，后者导致结果只有 $\{-1,1\}$。换言之就是失真评估的方法会使图像掉落自然分布的”流型“，从而使分布与原始图像不同。具体见下图所示： 
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-34-54.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-54" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-34-54.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-54" style="zoom:50%;" /></div>
 
 以 MSE 和 MAP 为例，说明了使用这两种方式进行复原的图像分布不一定等于原分布。虽然 MAP 在某些条件下 $p_{\hat X}=p_X$ 成立，但我们需要的是一个 stable distribution peserving distortion measure， 即对每一个 $p_{X,Y}$ 都成立。作者证明了这样的衡量标准是不存在的， 并在附录中给出了相关证明。
 
@@ -89,7 +89,7 @@ $$
 
 distortion 为 MSE， $d(⋅,⋅)$ 为 KL divergence。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-35-30.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-35-30" style="zoom:30%;" /></div>
+<div align=center><img src="/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-35-30.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-35-30" style="zoom:30%;" /></div>
 
 在这个曲线中，$D$ 增大， $P(D)$ 减小。曲线为 convex 并且对于更大的噪声现象更严重。
 
@@ -125,7 +125,7 @@ $$
 
 这里最小化（5）可以等效为最小化（3）, 变化的 $λ$ 产生变化的 $D$，从而产生感知-失真函数的估计量。可以使用这种方法去获得感知-失真平衡，将 $λ$ 设定为 [0,0.3] 之间，改变参数可得到曲线，如下图所示： 
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-36-11.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-36-11" style="zoom:30%;" /></div>
+<div align=center><img src="/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-36-11.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-36-11" style="zoom:30%;" /></div>
 
 同样可以看出，失真函数使用 MMSE 比使用 MAP 在产生相同失真情况下，感知质量更好，同时也比 Random draw 的失真要小。
 
@@ -139,7 +139,7 @@ $$
 
 论文这里说明失真一般通过全参考（FR）方式来度量，包括（RMSE/SSIM/MS-SSIM/IFC/VIF/VGG2.2) 等。为了评价图像的感知质量，这里采用了无参考 NR (NIQE) 指标。这里对 16 种 SR 算法从 FR 和 NR 进行评估，结果如下图所示： 
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-36-51.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-36-51" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-36-51.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-36-51" style="zoom:50%;" /></div>
 
 上图各部分都有共同的特点：
 
@@ -148,6 +148,6 @@ $$
 
 当远离不可到达区域时，FR 和感知质量可以达到正相关，接近不可达达区域时却不符合，FR 此时不能用来衡量图像感知质量，而 NR 可以用来表示感知质量好坏。因此在评估时需要对 FR 和 NR 统一进行评估，兼顾失真和感知质量。具体如下图所示： 
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-37-12.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-37-12" style="zoom:30%;" /></div>
+<div align=center><img src="/Assets/Images/The Perception-Distortion Tradeoff-2022-01-11-23-37-12.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-37-12" style="zoom:30%;" /></div>
 
 在 2017 年之前，IFC 指标可以很好的匹配感知质量，2017 年以后就开始反相关。这篇论文说明了失真和感知质量之间存在矛盾，可以使用一对 NR 和 FR 指标进行评价比较。

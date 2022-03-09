@@ -33,7 +33,7 @@ Video Super Resolution Based on Deep Learning: A comprehensive survey
 
 然而，这些高分辨率视频的显式模型由于其固定的解决方式，仍然不足以适应视频中的各种场景。随着深度学习在各个领域取得的巨大成功，基于深度学习的超分辨率算法得到了广泛的研究。研究人员提出了许多基于深层神经网络（如卷积神经网络 (CNN)、生成对抗网络 (GAN) 和递归神经网络 (RNN)) 的视频超分辨率方法，它们使用大量的低分辨率和高分辨率视频序列来输入神经网络进行**帧间对准、特征提取/融合和训练网络**，然后为相应的低分辨率 (LR) 视频序列生成高分辨率 (HR) 序列。大多数视频超分辨率方法的处理流程主要包括一个对准模块、一个特征提取与融合模块和一个重构模块，如图 1 所示。得益于深度神经网络的非线性学习能力，基于深度学习的方法在许多公共基准数据集上取得不错的性能。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-17-44.png" alt="VSR_Survey-2022-01-12-13-17-44" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-17-44.png" alt="VSR_Survey-2022-01-12-13-17-44" style="zoom:50%;" /></div>
 
 虽然关于单图像超分辨率研究的文献 [3，4，5] 已经发表了很多，但关于视频超分辨率任务的综述工作很少。Daithan kar 和 Ruikar 在文献 [6] 中对多种频域-空域方法进行了简要的评述，但对深度学习方法却鲜有提及。不同于以往的工作，我们对近年来视频超分辨率深度学习技术进行了较为全面的研究。众所周知，视频超分辨率和图像超分辨率的主要区别在于帧内信息的处理，而能否有效利用附近帧的信息对于超分辨率结果至关重要。我们专注于在各种基于深度学习的方法中利用帧内信息的方法。
 
@@ -96,11 +96,11 @@ k1,k2 用于稳定计算，通常设置为 0.01 和 0.03。
 
 2016 年，Kappeler[12] 在 SRCNN 的基础上提出了一种基于卷积神经网络 (VSRnet) 的视频超分辨率方法，这是一种将深度学习应用于视频超分辨率任务的著名方法。到目前为止，已经出现了许多视频超分辨率算法。接下来，我们总结了近年来基于深度学习的视频超分辨率方法的特点。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-22-37.png" alt="VSR_Survey-2022-01-12-13-22-37" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-22-37.png" alt="VSR_Survey-2022-01-12-13-22-37" style="zoom:50%;" /></div>
 
 几篇关于视频超分辨率的文献 [24,29,26] 表明，帧间信息的利用对视频超分性能有很大影响。能够适当和充分地利用这些信息可以提高超分辨率的效果。因此，我们根据帧间信息的利用方式为现有的视频超分辨率方法建立分类。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-22-52.png" alt="VSR_Survey-2022-01-12-13-22-52" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-22-52.png" alt="VSR_Survey-2022-01-12-13-22-52" style="zoom:50%;" /></div>
 
 根据视频帧是否对齐，我们将现有的方法分为两大类：对齐方法和非对齐方法。
 
@@ -136,7 +136,7 @@ deep draft-ensemble learning method
 
 使用 $\ell _1$ 范数损失和 total variation 正则化作为损失函数。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-33-23.png" alt="VSR_Survey-2022-01-12-13-33-23" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-33-23.png" alt="VSR_Survey-2022-01-12-13-33-23" style="zoom:50%;" /></div>
 
 #### 2. VSRnet
 
@@ -150,7 +150,7 @@ testing set: Vid4 dataset，由四种常用的视频组成（城市、日历、�
 
 训练策略：预训练好的 SRCNN 初始化网络权重，以减少对大规模视频数据集的依赖。然后使用小型视频数据集进行训练，损失函数 MSE。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-34-48.png" alt="VSR_Survey-2022-01-12-13-34-48" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-34-48.png" alt="VSR_Survey-2022-01-12-13-34-48" style="zoom:50%;" /></div>
 
 #### 3. VESPCN
 
@@ -158,7 +158,7 @@ video efficient sub-pixel convolutional network
 
 提出 spatial motion compensation transformer (MCT) 空间运动补偿转换模块用于运动估计和补偿。然后，将补偿后的帧放到一系列卷积层中，以进行特征提取和融合。最后，通过亚像素卷积层进行上采样以获得超分辨率结果。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-35-05.png" alt="VSR_Survey-2022-01-12-13-35-05" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-35-05.png" alt="VSR_Survey-2022-01-12-13-35-05" style="zoom:50%;" /></div>
 
 MCT 模块采用 CNN 提取运动信息并进行运动补偿。 MCT 使用 coarse-to-fine **从粗到精**的方法来计算视频图像序列的光流。
 
@@ -178,7 +178,7 @@ detail-revealing deep video super-resolution
 
 DRVSR 由三个主要模块组成：运动估计模块、运动补偿模块和融合模块。运动估计模块采用运动补偿变换器（MCT）用于运动估计，采用 SPMC 层进行运动补偿。SPMC 层由两个子模块组成，即坐标网络生成器和采样器。坐标网络生成器首先根据光流将 LR 空间中的坐标转换为 HR 空间中的坐标，然后采样器在 HR 空间中执行插值操作。融合模块主要包括编码器和解码器，在编码器中采用步长为 2 的卷积进行下采样，然后进行反卷积进行上采样，此外，融合模块还采用 ConvLSTM 模块处理时空信息。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-27-54.png" alt="VSR_Survey-2022-01-12-13-27-54" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-27-54.png" alt="VSR_Survey-2022-01-12-13-27-54" style="zoom:50%;" /></div>
 
 DRVSR 的训练分为三个阶段。首先，利用运动补偿损失对运动估计模块进行训练。然后固定训练好的运动估计模块的参数，使用 MSE 损失训练融合模块。最后整个网络使用运动补偿损失和 MSE 损失进行微调。为了使训练过程稳定，DRVSR 采用梯度裁剪策略来约束 ConvLSTM 的权重。优化器 Adam，网络权重由 Xavier 初始化。
 
@@ -191,7 +191,7 @@ robust video super-resolution
 - 空间对齐模块负责多帧对齐，使相邻帧与目标帧对齐。首先通过局部化网络估计相邻帧和目标帧之间的变换参数，然后基于获得的参数通过**空间变换层** [50] 使相邻帧与目标帧对齐。局部化网络由两个卷积层和两个全连接层组成，每个卷积层后面紧跟着一个最大池化层。
 - 时间自适应模块的特点是由超分辨率子网络的多个分支组成，每个网络负责处理时间尺度（即输入帧的数量），并输出相应的超分辨率结果。然后通过 temporal modulation module 时间调制模块为每个分支网络的超分辨率结果分配权重。最终的超分辨率结果是每个分支的超分辨率结果与相应权重的权重和。时间调制模块的输入帧数与超分辨率网络中的最大输入帧数相同，时间调制模块的网络结构与超分辨率网络相同，均采用 ESPCN 的网络结构
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-28-23.png" alt="VSR_Survey-2022-01-12-13-28-23" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-28-23.png" alt="VSR_Survey-2022-01-12-13-28-23" style="zoom:50%;" /></div>
 
 RVSR 使用来自 LIVE video quality assessment database、MCL-V 数据库和 TUM 1080p 数据集的视频作为训练集，同时采用数据增广技术。Vid4、penguin（Pg）、temple（tp）和 Ultra Video Group 数据库作为测试集。输入帧数为 5，patch size 大小设置为 30x30。
 
@@ -205,7 +205,7 @@ frame recurrent video super-resolution
 
 详细的实现方法：光流估计网络计算从前一帧到目标帧的光流，然后通过双线性插值将 LR 光流上采样到与 HR 视频相同的大小。接下来，上一帧的 HR 版本通过上采样 LR 光流进行扭曲，然后通过空间到深度变换对扭曲的 HR 帧进行下采样以获得 LR 版本。最后，将扭曲 HR 帧和目标帧的 LR 版本送入后续的超分辨率网络中，得到目标帧的超分辨率结果。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-29-09.png" alt="VSR_Survey-2022-01-12-13-29-09" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-29-09.png" alt="VSR_Survey-2022-01-12-13-29-09" style="zoom:50%;" /></div>
 
 光流网络由 14 个卷积层、3 个池化层和 3 个双线性上采样层组成。除了最后一个卷积层，每个卷积层后面跟着 LeakyReLU 激活函数，超分辨率网络由 2 个卷积层、2 个 x2 的反卷积层和 10 个残差块组成，其中每个残差块由 2 个卷积层和一个 ReLU 激活函数组成。损失函数是 MSE 和运动补偿损失的组合，Adam 作为网络的优化器，Vid4 作为测试集。
 
@@ -221,7 +221,7 @@ STTN 由三个主要模块组成：时空流估计模块、时空采样模块和
 - 时空采样器模块实际上是一种三线性插值方法，负责对当前多个相邻帧执行扭曲操作，并根据时空流模块获得的时空流获得对齐的视频帧。
 - 对于视频超分辨率模块，对齐的帧可以被送入超分辨率网络，用于特征融合和目标帧的超分辨率处理。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-30-59.png" alt="VSR_Survey-2022-01-12-13-30-59" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-30-59.png" alt="VSR_Survey-2022-01-12-13-30-59" style="zoom:50%;" /></div>
 
 STTN 采用 MSE 和运动补偿损失的组合作为其损失函数。
 
@@ -231,7 +231,7 @@ super-resolution optical flow for video super-resolution
 
 用于视频超分的光流架构。使用 OFNet 由粗到细地估计帧之间的光流，最终产生高分辨率光流。然后通过空间-深度转换将 HR 光流转换为 LR 光流。相邻帧通过 LR 光流扭曲，与目标帧对齐。SRNet 输入目标帧和扭曲帧，生成最终的超分结果，SRNet 由 2 个卷积层，5 个 dense 残差块和一个亚像素卷积层组成。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-31-19.png" alt="VSR_Survey-2022-01-12-13-31-19" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-31-19.png" alt="VSR_Survey-2022-01-12-13-31-19" style="zoom:50%;" /></div>
 
 训练集：来自 CDVL 数据集的 145 个视频，验证集：Ultra Video Group 数据集的 7 个视频，测试集：Vid4 和 10 个来自 DAVIS 数据集的视频。
 
@@ -249,7 +249,7 @@ TecoGAN 包括生成器和判别器，生成器将目标帧、前一帧和前一
 
 此外，判别器评估超分辨率结果的质量。判别器将生成的结果和 GT 作为输入，其中生成的结果和 GT 具有三个分量，即三个连续 HR 帧、三个对应的上采样 LR 帧和三个扭曲 HR 帧。使用这种输入格式，可以缓解最终结果中的空间过度平滑和时间不一致。另外，TecoGAN 提出了“ping-pong”损失函数，以减少长期时间细节偏差，使超分辨率结果更自然。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-32-11.png" alt="VSR_Survey-2022-01-12-13-32-11" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-32-11.png" alt="VSR_Survey-2022-01-12-13-32-11" style="zoom:50%;" /></div>
 
 TecoGAN 的损失函数包括 6 部分，MSE、对抗性损失、鉴别器的特征空间损失、感知损失、“乒乓”损失和运动补偿损失。优化器用 Adam，测试集选用 Vid4 和 Tear of Steel (ToS)。
 
@@ -265,7 +265,7 @@ TOFlow 将用于光流估计的网络与重建网络相结合，并联合训练�
 
 TOFlow 提出了一个新的数据集，称为 Vimeo-90k（V-90k），用于训练和测试视频序列。V90K 包含 4278 个视频，包括 89800 个不同的独立场景。TOFlow 采用 L1 范数作为损失函数。对于视频超分辨率，TOFlow 将 7 个上采样的连续帧作为输入。除了 V-90K，TOFlow 还使用 Vid4 作为测试数据集。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-32-51.png" alt="VSR_Survey-2022-01-12-13-32-51" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-32-51.png" alt="VSR_Survey-2022-01-12-13-32-51" style="zoom:50%;" /></div>
 
 #### 11. MMCNN
 
@@ -273,7 +273,7 @@ multi-memory convolutional neural network
 
 MMCNN 包含 5 个主要的模块：光流估计，特征提取，多记忆细节融合，特征重构和亚像素卷积层。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-38-14.png" alt="VSR_Survey-2022-01-12-13-38-14" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-38-14.png" alt="VSR_Survey-2022-01-12-13-38-14" style="zoom:50%;" /></div>
 
 光流估计模块对连续的输入帧进行处理，使相邻帧与目标帧对齐，然后将扭曲帧送入后续网络模块中，以获得目标帧的最终超分辨率结果。
 
@@ -287,7 +287,7 @@ recurrent back-projection network
 
 受反投影算法的启发，提出了循环反投影网络（RBPN），其结构如下图所示。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-38-40.png" alt="VSR_Survey-2022-01-12-13-38-40" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-38-40.png" alt="VSR_Survey-2022-01-12-13-38-40" style="zoom:50%;" /></div>
 
 该网络由**特征提取模块、投影模块和重建模块**组成。
 
@@ -305,7 +305,7 @@ motion estimation and motion compensation network
 
 运动估计网络采用 FlownNet [45]，kernel estimation network 核估计网络采用改进的 U-Net[57]，包括五个最大池化层、五个非池化层以及从编码器到解码器的 skip connections。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-39-09.png" alt="VSR_Survey-2022-01-12-13-39-09" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-39-09.png" alt="VSR_Survey-2022-01-12-13-39-09" style="zoom:50%;" /></div>
 
 在 MEMC-Net 中，超分模块的架构类似于 EDSR。此外，为了处理遮挡问题，它采用了预训练的 ResNet18[63] 提取输入帧的特征，同时将 ResNet18 的第一个卷积层的输出作为上下文信息提供给自适应扭曲层，以执行相同的扭曲操作。
 
@@ -323,7 +323,7 @@ real-time video super-resolution
 
 采用运动卷积核估计网络，是一种全卷积编解码器结构，用于估计目标帧和相邻帧之间的运动，并生成与当前目标帧和相邻帧相对应的一对 1 维卷积核。然后利用估计的卷积核对相邻帧进行扭曲，使其与目标帧对齐。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-39-32.png" alt="VSR_Survey-2022-01-12-13-39-32" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-39-32.png" alt="VSR_Survey-2022-01-12-13-39-32" style="zoom:50%;" /></div>
 
 RTVSR 首先采用运动卷积核网络对目标帧和相邻帧进行卷积核估计，并产生一对分别代表水平和垂直方向的 1 维卷积核。然后利用估计的卷积核对相邻帧进行扭曲。然后将扭曲帧和目标帧送入后续的超分辨率网络，得到目标帧的超分辨率结果。
 
@@ -337,7 +337,7 @@ MultiBoot 有两个阶段：第一阶段的输出用作第二阶段的输入，�
 
 在第二阶段，前一阶段的输出被降采样，与初始 LR 帧连接，并输入到网络以获得目标帧的最终超分辨率结果。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-40-26.png" alt="VSR_Survey-2022-01-12-13-40-26" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-40-26.png" alt="VSR_Survey-2022-01-12-13-40-26" style="zoom:50%;" /></div>
 
 REDS 作为训练集和测试集，数据增广。损失函数 Huber loss：
 
@@ -361,7 +361,7 @@ $I_t$ 表示 HR 图像，$\widetilde{I}_t$ 表示估计的 HR 图像，$δ = 1$ 
 
 **通过额外的卷积层映射输入特征图以获得 offset 偏移**。将偏移量添加到常规卷积核中以生成可变形卷积核，然后与输入特征图卷积，得到输出特征图。可变形卷积的图示如图所示。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-41-32.png" alt="VSR_Survey-2022-01-12-13-41-32" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-41-32.png" alt="VSR_Survey-2022-01-12-13-41-32" style="zoom:50%;" /></div>
 
 虽然可变形卷积增加了网络对空间变形的适应性，但计算量也增加了。采用可变形卷积的方法主要包括增强可变形视频恢复（EDVR）[24]、可变形非局部网络（DNLN）[25] 和时域可变形对准网络（TDAN）[26]。
 
@@ -375,7 +375,7 @@ EDVR 由三部分组成，包括 PCD 对准模块、TSA 融合模块和重建模
 
 首先，通过 PCD 对输入帧进行对齐，然后通过 TSA 对对齐的帧进行融合。然后将融合后的结果输入重建模块进行特征提取，再通过上采样得到残差 HR 图像，将残差 HR 图像加到直接上采样的目标帧中得到最终的 SR 帧，结构如下图所示。为了进一步提高性能，EDVR 还采用了两阶段的方法，其第二阶段与第一阶段相似，但网络深度较浅。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-42-01.png" alt="VSR_Survey-2022-01-12-13-42-01" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-42-01.png" alt="VSR_Survey-2022-01-12-13-42-01" style="zoom:50%;" /></div>
 
 EDVR 使用 NTIRE19 挑战中提出的真实动态场景（REDS）数据集作为训练集。数据集由 300 个分辨率为 720×1280 的视频序列组成，每个视频有 100 帧，其中训练集、验证集和测试集分别有 240、30 和 30 个视频。在实验中，由于无法获得测试集的 GT，作者对其余视频进行了重新分组。作者选取了 4 个具有代表性的视频（REDS4）作为测试集，其余视频作为训练集进行数据增广。此外，EDVR 采用 Charbonnier 函数作为损失函数，Adam 作为优化器，它以五个连续的帧作为输入。patch size 和 batch size 分别设置为 64×64 和 32。初始学习速率设置为$4\times 10^{-4}$。
 
@@ -389,7 +389,7 @@ deformable non-local network
 
 DNLN 的整个网络由一个特征提取模块、一个对齐模块、一个非局部注意模块和一个重建模块组成，其中特征提取模块由一个卷积层和 5 个残差块组成。对齐模块由 5 个可变形卷积层组成，重建模块由 16 个 dense 残差块（RRDB）组成。特征提取模块首先提取目标帧和相邻帧的特征，然后将特征输入对齐模块，使相邻帧的特征与目标帧的特征对齐。然后将对齐特征和目标特征输入非局部注意模块，提取它们之间的相关性，再由重建模块对提取的相关性进行融合。重建模块的输出被添加到目标帧的特征中，最终由上采样层生成最终超分结果。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-42-25.png" alt="VSR_Survey-2022-01-12-13-42-25" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-42-25.png" alt="VSR_Survey-2022-01-12-13-42-25" style="zoom:50%;" /></div>
 
 VimLReo-90K 训练集，数据增广技术。LR 通过 HR 4 倍下采样生成。Patch size 50×50，Adam 优化器，L1 范数作为损失函数。
 
@@ -399,7 +399,7 @@ temporally deformable alignment network
 
 TDAN[26] 将可变形卷积应用于目标帧和相邻帧，并获得相应的偏移。然后，根据偏移量扭曲相邻帧以与目标帧对齐。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-42-46.png" alt="VSR_Survey-2022-01-12-13-42-46" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-42-46.png" alt="VSR_Survey-2022-01-12-13-42-46" style="zoom:50%;" /></div>
 
 TDAN 可分为两部分，对准模块和重构模块。在对齐模块中，目标帧和相邻帧作为输入。然后由卷积层和 residual blocks 组成的特征提取层分别提取它们的特征，然后将得到的特征拼接。
 
@@ -427,7 +427,7 @@ TDAN 采用 Vimeo-90K 作为训练集，使用 L 范数损失和运动补偿损�
 
 判别器用于确定生成器的输出是生成图像还是 GT 图像。然后，判别器的结果作用于生成器，使其产生更接近 GT 图像的结果。最后通过迭代优化得到相对满意的结果。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-43-39.png" alt="VSR_Survey-2022-01-12-13-43-39" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-43-39.png" alt="VSR_Survey-2022-01-12-13-43-39" style="zoom:50%;" /></div>
 
 对于网络的训练，首先训练生成器，然后联合训练生成器和判别器。VSRResNet 的损失函数由对抗损失、content loss 内容损失和感知损失组成，由 VGG[75] 提取生成图像和对应的 GT 图像的特征，然后利用提取的特征通过 CB 损失函数计算损失。内容损失表示在生成结果和 GT 之间计算的 CB 损失。
 
@@ -443,7 +443,7 @@ FFCVSR 由局部网络和上下文网络组成，其中局部网络由 5 个卷�
 
 此外，简单地将先前恢复的 HR 帧输入到下一上下文网络会导致抖动和锯齿伪影，解决方法是对于每个 T 帧序列，当前局部网络的输出用作前一上下文网络的输出。这种方法称为抑制更新算法。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-44-14.png" alt="VSR_Survey-2022-01-12-13-44-14" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-44-14.png" alt="VSR_Survey-2022-01-12-13-44-14" style="zoom:50%;" /></div>
 
 训练集： harmonicinc.com，包括 Venice 和 Myanmar，分辨率 4k，测试集 Vid4。损失函数 MSE，优化器 Adam，初始学习率 $10^{-4}$。
 
@@ -453,7 +453,7 @@ FFCVSR 由局部网络和上下文网络组成，其中局部网络由 5 个卷�
 
 与 2D 卷积相比，3D 卷积模块 [76，77] 可以在时空域上操作，2D 卷积仅通过输入帧上的滑动卷积核利用空间信息。通过提取时间信息来考虑帧之间的相关性有利于视频序列的处理。3D 卷积的流程图如图 25 所示，具有代表性的 3D 卷积方法包括 DUF [29]、FSTRN [32] 和 3DSRnet [31]。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-44-41.png" alt="VSR_Survey-2022-01-12-13-44-41" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-44-41.png" alt="VSR_Survey-2022-01-12-13-44-41" style="zoom:50%;" /></div>
 
 #### 1. DUF
 
@@ -461,7 +461,7 @@ dynamic upsampling filters 动态滤波器网络 [78] 可以为特定的输入�
 
 DUF 不仅执行滤波，还执行上采样操作。为了增强超分辨率结果的高频细节，DUF 使用一个单独的网络来估计目标帧的残差图。SR 图是残差图和动态上采样滤波器处理后的帧的总和。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-44-59.png" alt="VSR_Survey-2022-01-12-13-44-59" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-44-59.png" alt="VSR_Survey-2022-01-12-13-44-59" style="zoom:50%;" /></div>
 
 DUF 还提出了一种基于时间轴的视频数据增强方法。通过对不同时间间隔的帧进行顺序或相反顺序的采样，可以得到不同运动速度和方向的视频。在实验中，DUF 使用 Huber 函数作为其损失函数，其中δ=0.01。Adam 用作优化器，初始学习速率设置为 $10^{-3}$。
 
@@ -478,7 +478,7 @@ STRN 由以下四部分组成：一个 LR 视频浅层特征提取网络（LFENE
 - LSRNET 由个 C3D 层和一个反卷积层组成，负责融合前几层的信息并进行上采样。
 - GRL 由 LR 空间残差学习（LRL）和跨空间残差学习（CRL）组成，其中 LRL 在 FRBS 的开始和结束时使用，以提高特征提取的性能，CRL 用于将上采样的 LR 输入帧传送到整个网络的输出，然后两者相加得到最终的 SR 结果。此外，FSTRN 在 LRL 之后采用了一个 dropout 层，以增强网络的生成能力
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-45-41.png" alt="VSR_Survey-2022-01-12-13-45-41" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-45-41.png" alt="VSR_Survey-2022-01-12-13-45-41" style="zoom:50%;" /></div>
 
 在实验中，FSTRN 使用 25 个 YUV 格式的视频序列作为训练集，使用 [79] 中的视频作为测试集（包括舞蹈、旗帜、帆船、跑步机和涡轮机）。输入帧数为 5。Cb 函数用作损失函数，Adam 优化器。初始学习率设置为 $10^{-4}$，批量大小设置为 144×144。
 
@@ -494,7 +494,7 @@ STRN 由以下四部分组成：一个 LR 视频浅层特征提取网络（LFENE
 
 在实验环境中，3D 卷积函数的核大小为 3×3×3。3DSRnet 使用 MSE 作为其损失函数，Adam 作为优化器，Xavier 作为权重初始化方法，输入帧数为 5。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-46-20.png" alt="VSR_Survey-2022-01-12-13-46-20" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-46-20.png" alt="VSR_Survey-2022-01-12-13-46-20" style="zoom:50%;" /></div>
 
 简言之这些 3D 卷积方法提取连续帧之间的时空相关性，而不是使用运动估计以提取帧之间的运动信息，并进行运动压缩以对齐帧。然而，它们存在计算量相当大的问题。
 
@@ -512,7 +512,7 @@ spatio-temporal convolutional network
 
 空间模块由 20 层 3×3 卷积核的卷积组成，卷积核的数量 64。时间模块有三层，每层由多个 BMC-LSTM 子模块组成。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-46-41.png" alt="VSR_Survey-2022-01-12-13-46-41" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-46-41.png" alt="VSR_Survey-2022-01-12-13-46-41" style="zoom:50%;" /></div>
 
 输入帧 5 帧，在这种情况下，相应的空间模块由 5 个分支组成，每个分支有 20 个卷积层。时间模块 3 层，每层有 5 个 BMC-LSTM 子模块。重构模块由 1 个卷积层组成，STCN 采用 MSE 作为其损耗函数。具体而言，损失函数计算相邻帧的重建结果与其相应 HR 帧之间，以及目标帧的重建结果与其相应 HR 帧之间的差异。训练期间，在训练期间，通过将平衡参数从 1 逐渐衰减到 0 来控制相邻帧的损失在其总损失中的权重。STCN 使用 Adam 作为优化器，批量大小为 64，初始学习率为$10^{-4}$。
 
@@ -527,7 +527,7 @@ BRCN 由前向子网和反向子网两个模块组成，结构相似，只是处
 - 前向子网：当前时间的前馈卷积输出和时间 i−1 的条件卷积输出。
 - 反向子网：当前时间的前馈卷积输出和时间 i+1 的条件卷积输出。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-47-37.png" alt="VSR_Survey-2022-01-12-13-47-37" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-47-37.png" alt="VSR_Survey-2022-01-12-13-47-37" style="zoom:50%;" /></div>
 
 使用 25 个 YUV 格式的视频序列作为训练集，[79] 中的视频序列作为测试集。patch size 大小为 32×32，输入帧数为 10，损失函数 MSE。通过随机梯度下降法（SGD）对网络进行优化。
 
@@ -543,7 +543,7 @@ residual invertible spatio-temporal network
 - 时间模块：在提取时空信息后，采用稀疏融合策略对特征进行选择性融合。
 - 重建模块：反卷积重建出目标帧的 HR 结果。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-47-57.png" alt="VSR_Survey-2022-01-12-13-47-57" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-47-57.png" alt="VSR_Survey-2022-01-12-13-47-57" style="zoom:50%;" /></div>
 
 在实验中，RISTN 从 Imagenet 数据集中随机选择 50K 图像对空间模块进行预训练，然后使用从 699pic.com 和 Vimeo.com 收集的 192 个分辨率为 1920 X 1080 的视频作为训练集。使用 MSE 作为其损失函数，稀疏矩阵由 L1 范数正则化项约束。此外，输入帧的数量设置为 5。超分辨率倍数为 4，Vid4 是测试集。
 
@@ -555,7 +555,7 @@ residual recurrent convolutional network
 
 使用组合局部全局和总变量 (GLG-TV) 的方法对目标帧及其相邻帧进行运动估计和补偿。补偿帧用作网络的输入，前向网络中使用前向卷积，后向网络中使用循环卷积，将二者输出相加。最后，通过在输入中添加目标帧来获得结果。为了进一步提高性能，RRCN 还采用了自集成 self-ensemble 策略，并将其与单图像超分辨率方法 EDSR+[64] 的输出相结合，分别获得了名为 RRCN+和 RRCN++的两个模型。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-48-18.png" alt="VSR_Survey-2022-01-12-13-48-18" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-48-18.png" alt="VSR_Survey-2022-01-12-13-48-18" style="zoom:50%;" /></div>
 
 RRCN 由 15 个卷积层组成，除最后一层外，其他层的前向卷积使用 3×3 卷积核和 32 个特征映射。在最后一层，使用 3×3 卷积核，但特征映射的数量取决于最终的输出格式。循环卷积采用 1×1 核和 32 个特征映射。此外，RRCN 使用 Myanmar 视频作为训练集，并使用 Myanmar、Vid4 和 YUV21 作为测试集。损失函数 MSE，RMSProp 用作优化方法。输入帧数为 5，patch size 大小为 81×81。上采样和补偿的 LR 帧用作 RRCN 的输入。
 
@@ -581,7 +581,7 @@ $$
 
 非局部块可以很容易地加入到现有的深度卷积神经网络中。虽然非局部网络能够有效地捕获时空信息，但和 3D 卷积一样，不足之处在于计算量大。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-49-22.png" alt="VSR_Survey-2022-01-12-13-49-22" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-49-22.png" alt="VSR_Survey-2022-01-12-13-49-22" style="zoom:50%;" /></div>
 
 #### 1. PFNL
 
@@ -589,7 +589,7 @@ progressive fusion non-local
 
 基于非局部块的一种典型方法是渐进式融合非局部（PFNL）[36] 方法，如图 34 所示。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-49-46.png" alt="VSR_Survey-2022-01-12-13-49-46" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-49-46.png" alt="VSR_Survey-2022-01-12-13-49-46" style="zoom:50%;" /></div>
 
 PFNL 使用非局部残差块来提取时空特征，并提出渐进式融合残差块（PFRB）来进行融合。最后，通过亚像素卷积层的输出加到通过双三次插值上采样的输入帧中，得到 SR 图像。
 
@@ -601,11 +601,11 @@ PFRB 由三个卷积层组成。首先，对输入帧进行 3×3 卷积，串联
 
 从 PSNR 和 SSIM 两方面总结了具有代表性的视频超分方法，放大因子包括 2、3、4，退化类型为带图像 resize function 的双三次下采样 (BI) 和高斯模糊下采样 (BD)。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-50-22.png" alt="VSR_Survey-2022-01-12-13-50-22" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-50-22.png" alt="VSR_Survey-2022-01-12-13-50-22" style="zoom:50%;" /></div>
 
 ### Dataset
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/VSR_Survey-2022-01-12-13-52-07.png" alt="VSR_Survey-2022-01-12-13-52-07" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/VSR_Survey-2022-01-12-13-52-07.png" alt="VSR_Survey-2022-01-12-13-52-07" style="zoom:50%;" /></div>
 
 ## Trend and Challenge
 

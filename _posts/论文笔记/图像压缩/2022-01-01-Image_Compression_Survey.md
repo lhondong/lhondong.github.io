@@ -84,7 +84,7 @@ CNN 在图像领域发展迅速，特别是在计算机视觉领域中表现出�
 - [17] Jiang F，Tao W，Liu S，et al.An end- to- end compression framework based on convolutional neural networks[J]. IEEE Transactions on Circuits and Systems for Video
   Technology，2017，28(10):3007-3018.
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Image_Compression_Survey-2022-01-12-09-38-22.png" alt="Image_Compression_Survey-2022-01-12-09-38-22" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Image_Compression_Survey-2022-01-12-09-38-22.png" alt="Image_Compression_Survey-2022-01-12-09-38-22" style="zoom:50%;" /></div>
 
 虽然 Jiang 等人端到端图像压缩同时优化两个卷积神经网络，但其在编解码前后直接连接两个卷积神经网络的近似方法并不是最优的。Zhao 等人 [18] 认为这个问题最优解的直观想法是使用 CNN 来完美地替代传统的梯度反向传播编解码器端到端的方式提高重构图像的编码质量，因此他们提出使用一个虚拟编码器，在训练时使用虚拟编码器用于连接编码端和解码端，虚拟编码器也为 CNN，并通过虚拟编码器使解码端的 CNN 逼近最优解，这种方式将真实图像的有效表示信息经过虚拟编码器投影到用于重构图像的解码网络。该方法不仅得到了高质量的重建图像，也可以和端到端的网络结构一样可以兼容传统编码器，同时还可以推广到其他基于 CNN 的端到端图像压缩结构中，但是整个框架存在三个 CNN，经过一次训练难度相对较大，因此在训练上需要对三个网络进行分解训练，但实际应用只需要两个网络。
 
@@ -106,7 +106,7 @@ Toderici 等人 [21] 首次使用了卷积 LSTM 实现了可变比特率的端�
 - [21] Toderici G，O'Malley S M，Hwang S J，et al.Variable rate image compression with recurrent neural networks[J]. arXiv:1511.06085，2015.
 - [22] Toderici G，Vincent D，Johnston N，et al.Full resolution image compression with recurrent neural networks[C]// Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition，2017:5306-5314.
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Image_Compression_Survey-2022-01-12-09-38-39.png" alt="Image_Compression_Survey-2022-01-12-09-38-39" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Image_Compression_Survey-2022-01-12-09-38-39.png" alt="Image_Compression_Survey-2022-01-12-09-38-39" style="zoom:50%;" /></div>
 
 该方法利用 RNN 的成功是有目共睹的，使更多人的目光转向了图像压缩。在此之后 Johnston 等人 [23] 为了提高框架的压缩性能，修改了递归结构从而改善了空间扩散，使得网络能够更加高效地捕获图像信息，引入了一种空间自适应比特分配算法，它可以根据图像的复杂性动态的调整每个图像的比特率；采用了基于 SSIM 加权像素损失训练 [24-25]，可以更好地感知图像。
 
@@ -138,7 +138,7 @@ GAN 初期的发展由于其生成图像类型单一，模型训练难度大，�
 
 - [30]  Agustsson E，Tschannen M，Mentzer F，et al. Generative adversarial networks for extreme learned image compression[C]//Proceedings of the IEEE International Conference on Computer Vision，2019:221-231.
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Image_Compression_Survey-2022-01-12-09-39-24.png" alt="Image_Compression_Survey-2022-01-12-09-39-24" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Image_Compression_Survey-2022-01-12-09-39-24.png" alt="Image_Compression_Survey-2022-01-12-09-39-24" style="zoom:50%;" /></div>
 
 ### 对比分析
 

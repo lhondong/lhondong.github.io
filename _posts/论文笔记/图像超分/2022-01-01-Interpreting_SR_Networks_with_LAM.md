@@ -86,7 +86,7 @@ attention 用于 SR，效果是好，但 attention 为什么使得效果好了�
 
 基于分类问题归因分析中的 **integrated gradient**（积分梯度）方法。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-43-45.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-43-45" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-43-45.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-43-45" style="zoom:50%;" /></div>
 
 对 HR 图像中间红框处的超分结果进行归因分析，右边 LR 图像上标红的像素即为对该超分结果“贡献大”的像素。那么如何定义“贡献”，又怎样找出“贡献大”的像素呢？这要从 saliency map 说起。
 
@@ -94,13 +94,13 @@ attention 用于 SR，效果是好，但 attention 为什么使得效果好了�
 
 这篇 ICLR 提出了早期的归因分析方法，并将归因结果图称为 saliency map。思想十分简单，就是用**梯度**来衡量“贡献”。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-44-25.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-44-25" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-44-25.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-44-25" style="zoom:50%;" /></div>
 
 常见的分类网络结构如上图：输入图片经过若干卷积层，变换为向量，再经过若干 mlp 映射到得分向量（中间搭配 ReLU，maxpooling 等），一般而言，对于 C 分类问题，得分向量维度为 C。
 
 假设现在给定一张图片，前向传播后得分最高的是 c 类别，我们想探究图片中哪些像素导致模型将其判定为类别 c。只关注得分向量的 c 分量（对应类别 c），那么模型是一个从输入图片到实数的映射，即**多元实函数**。论文提出用类别 c 得分对输入的每个变量（即图片的每个像素）的偏导数的绝对值来衡量该变量的“贡献”。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-45-11.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-45-11" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-45-11.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-45-11" style="zoom:50%;" /></div>
 
 这是论文中展示的部分 saliency map 结果，基本上能将目标物体所在的像素标记出来，符合我们的预期。
 
@@ -130,11 +130,11 @@ $$
 
 直观理解：
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-50-51.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-50-51" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-50-51.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-50-51" style="zoom:50%;" /></div>
 
 最后，论文证明了 integrated gradient 可以满足所提出的几条性质，也展示了和 saliency map 的比较结果。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-51-15.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-51-15" style="zoom:100%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-51-15.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-51-15" style="zoom:100%;" /></div>
 
 ## 三、方法
 
@@ -164,7 +164,7 @@ low level 的话归因回去，就一定会归因到原图。因为我们知道�
 
 对于 low-level 来讲，最重要的是对同一个局部的处理，不同的网络是不是利用到了不同的像素，用量化的技巧来衡量利用了多少像素。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-53-27.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-53-27" style="zoom:100%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-21-53-27.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-21-53-27" style="zoom:100%;" /></div>
 
 $F$ 即为 SR 网络，$D$ 为上述 sobel 特征提取器。
 
@@ -183,7 +183,7 @@ $$
 \operatorname{LAM}_{F, D}(\gamma)_{i}:=\int_{0}^{1} \frac{\partial D(F(\gamma(\alpha))}{\partial \gamma(\alpha)_{i}} \times \frac{\partial \gamma(\alpha)_{i}}{\partial \alpha} d \alpha
 $$
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-02-19.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-02-19" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-02-19.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-02-19" style="zoom:50%;" /></div>
 
 ## 四、实验
 
@@ -207,25 +207,25 @@ $$
 
 ### 4.3 Attribution Results
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-04-30.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-04-30" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-04-30.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-04-30" style="zoom:50%;" /></div>
 
 ### 4.4 Exploration with LAM
 
 #### Diffusion Index vs. Network Performances
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-14.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-14" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-14.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-14" style="zoom:50%;" /></div>
 
 #### Diffusion Index vs. Receptive Field
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-54.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-54" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-54.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-05-54" style="zoom:50%;" /></div>
 
 #### Diffusion Index vs. Network Scales
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-06-28.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-06-28" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-06-28.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-06-28" style="zoom:50%;" /></div>
 
 #### Diffusion Index vs. Image Content
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-07-04.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-07-04" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Interpreting_SR_Networks_with_LAM-2022-01-11-22-07-04.png" alt="Interpreting_SR_Networks_with_LAM-2022-01-11-22-07-04" style="zoom:50%;" /></div>
 
 ## 五、总结
 

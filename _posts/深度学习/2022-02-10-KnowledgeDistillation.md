@@ -40,7 +40,7 @@ Knowledge Distillation，简称 KD，顾名思义，就是将已经训练好的�
 1. 模型的参数量和其所能捕获的“知识“量之间并非稳定的线性关系（下图中的 1)，而是接近边际收益逐渐减少的一种增长曲线（下图中的 2 和 3)。
 2. 完全相同的模型架构和模型参数量，使用完全相同的训练数据，能捕获的“知识”量并不一定完全相同，另一个关键因素是训练的方法。合适的训练方法可以使得在模型参数总量比较小时，尽可能地获取到更多的“知识”（下图中的 3 与 2 曲线的对比）。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/KnowledgeDistillation-2022-01-29-20-37-40.png" alt="KnowledgeDistillation-2022-01-29-20-37-40" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/KnowledgeDistillation-2022-01-29-20-37-40.png" alt="KnowledgeDistillation-2022-01-29-20-37-40" style="zoom:50%;" /></div>
 
 ## 2. 知识蒸馏的理论依据
 
@@ -85,7 +85,7 @@ $$q_i=\frac{e^{z_i/T}}{\sum_je^{z_j/T}}$$
 
 **第一步**是训练 Net-T；**第二步**是在高温 T 下，蒸馏 Net-T 的知识到 Net-S
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/KnowledgeDistillation-2022-01-29-21-28-31.png" alt="KnowledgeDistillation-2022-01-29-21-28-31" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/KnowledgeDistillation-2022-01-29-21-28-31.png" alt="KnowledgeDistillation-2022-01-29-21-28-31" style="zoom:50%;" /></div>
 
 训练 Net-T 的过程很简单，下面详细讲讲第二步：高温蒸馏的过程。高温蒸馏过程的目标函数由 distill loss（对应 soft target) 和 student loss（对应 hard target) 加权得到。示意图如上。
 
@@ -159,7 +159,7 @@ $$ L_{soft}' = \frac{1}{2} (z_i-v_i)^2 $$
 
 假设某个输入的“2”更加形似“3”，softmax 的输出值中"3"对应的概率为 0.1，而其他负标签对应的值都很小，而另一个“2”更加形似“7”，“7”对应的概率为 0.1。这两个“2”对应的 hard target 的值是相同的，但是它们的 soft target 却是不同的，由此我们可见 soft target 蕴含着比 hard target 多的信息。并且 soft target 分布的熵相对高时，其 soft target 蕴含的知识就更丰富。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/KnowledgeDistillation-2022-01-30-09-35-53.png" alt="KnowledgeDistillation-2022-01-30-09-35-53" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/KnowledgeDistillation-2022-01-30-09-35-53.png" alt="KnowledgeDistillation-2022-01-30-09-35-53" style="zoom:50%;" /></div>
 
 这就解释了为什么通过蒸馏的方法训练出的 Net-S 相比使用完全相同的模型结构和训练数据只使用 hard target 的训练方法得到的模型，拥有更好的泛化能力。
 

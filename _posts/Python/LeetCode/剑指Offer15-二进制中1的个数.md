@@ -78,7 +78,7 @@ class Solution(object):
 - (n−1)：二进制数字 n 最右边的 1 变成 0，此 1 右边的 0 都变成 1。
 - n&(n−1) ：二进制数字 n 最右边的 1 变成 0 ，其余不变。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/剑指Offer15-二进制中1的个数-2022-02-07-21-05-34.png" alt="剑指Offer15-二进制中1的个数-2022-02-07-21-05-34" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/剑指Offer15-二进制中1的个数-2022-02-07-21-05-34.png" alt="剑指Offer15-二进制中1的个数-2022-02-07-21-05-34" style="zoom:50%;" /></div>
 
 #### 时间复杂度 
 

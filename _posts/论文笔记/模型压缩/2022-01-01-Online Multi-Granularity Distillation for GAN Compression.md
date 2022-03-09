@@ -113,7 +113,7 @@ $$
 $$
 其中 n 是要采样的特征图数，c 是特征图的通道数。$wij$ 是第 i 个特征图的第 j 个通道的注意力权重。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-40-46.png" alt="Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-40-46" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-40-46.png" alt="Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-40-46" style="zoom:50%;" /></div>
 
 综上所述，整个在线多粒度蒸馏的损失函数定义：
 $$
@@ -124,11 +124,11 @@ $$
 
 在 Pix2Pix 的实验结果表明，OMGD 对 U-Net 和 Resnet 两种类型的 GAN 都显著优于当前最先进的方法，且计算成本减少许多。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-13.png" alt="Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-13" style="zoom:100%;" /></div>
+<div align=center><img src="/Assets/Images/Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-13.png" alt="Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-13" style="zoom:100%;" /></div>
 
 在 CycleGAN 实验结果表明，OMGD 以更小的计算成本获得了更好的性能表现。
 
-<div align=center><img src="https://cdn.jsdelivr.net/gh/lhondong/Assets/Images/Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-34.png" alt="Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-34" style="zoom:50%;" /></div>
+<div align=center><img src="/Assets/Images/Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-34.png" alt="Online Multi-Granularity Distillation for GAN Compression-2022-01-12-10-41-34" style="zoom:50%;" /></div>
 
 在手机上测试（华为 P20 和小米 10），极大加速推理，OMGD（U）1.0×将延迟从 140.8ms 减少到 14.01ms，延迟下降 90%。
 
