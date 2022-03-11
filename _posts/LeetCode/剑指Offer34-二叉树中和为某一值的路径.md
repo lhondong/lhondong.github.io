@@ -22,7 +22,7 @@ tags:
 
 示例 1:
 
-<div align=center><img src="../assets/剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-42-42.png" alt="剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-42-42" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-42-42.png" alt="剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-42-42" style="zoom:50%;" /></div>
 
 ```
 输入：root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
@@ -81,7 +81,7 @@ class Solution(object):
   4. 先序遍历：递归左 / 右子节点。
   5. 路径恢复：向上回溯前，需要将当前节点从路径 path 中删除，即执行 path.pop() 。
 
-<div align=center><img src="../assets/剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-47-51.png" alt="剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-47-51" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-47-51.png" alt="剑指Offer34-二叉树中和为某一值的路径-2022-02-01-09-47-51" style="zoom:50%;" /></div>
 
 ### 复杂度分析
 
@@ -124,7 +124,7 @@ class Solution(object):
 
 从上面的描述中，可以发现分配左右节点的先后顺序也是 3,9,20，跟列表顺序是一致的，即先给 3 分配左右节点，再给 9 分配左右节点，再给 20 分配左右节点，如果列表更长，接下来会跳过 null，给 15 分配左右节点，再给 7 分配左右节点。
 
-<div align=center><img src="../assets/剑指Offer34-二叉树中和为某一值的路径-2022-02-01-20-27-13.png" alt="剑指Offer34-二叉树中和为某一值的路径-2022-02-01-20-27-13" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/剑指Offer34-二叉树中和为某一值的路径-2022-02-01-20-27-13.png" alt="剑指Offer34-二叉树中和为某一值的路径-2022-02-01-20-27-13" style="zoom:50%;" /></div>
 
 代码实现：
 

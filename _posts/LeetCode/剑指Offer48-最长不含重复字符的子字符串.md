@@ -61,7 +61,7 @@ tags:
 
 - 返回值：max(dp) ，即全局的 “最长不重复子字符串” 的长度。
 
-<div align=center><img src="../assets/剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-40-24.png" alt="剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-40-24" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-40-24.png" alt="剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-40-24" style="zoom:50%;" /></div>
 
 ### 空间复杂度优化
 
@@ -82,9 +82,9 @@ tags:
 - 时间复杂度 O(N)：其中 N 为字符串长度，动态规划需遍历计算 dp 列表。
 - 空间复杂度 O(1)：字符的 ASCII 码范围为 0~127 ，哈希表 dic 最多使用 O(128)=O(1) 大小的额外空间。
 
-<div align=center><img src="../assets/剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-49-49.png" alt="剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-49-49" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-49-49.png" alt="剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-49-49" style="zoom:50%;" /></div>
 
-<div align=center><img src="../assets/剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-50-10.png" alt="剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-50-10" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-50-10.png" alt="剑指 Offer48-最长不含重复字符的子字符串-2022-01-29-08-50-10" style="zoom:50%;" /></div>
 
 Python 的 get(key,default) 方法代表当哈希表包含键 key 时返回对应 value，不包含时返回默认值 default。
 
