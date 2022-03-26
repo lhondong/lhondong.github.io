@@ -1,3 +1,14 @@
+---
+title: "深度学习视频编解码综述"
+subtitle: ""
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-42.jpg"
+mathjax: true
+tags:
+  - 视频编码
+---
+
 # Server-Driven Video Streaming for Deep Learning Inference
 
 ## 摘要
@@ -72,10 +83,10 @@ Source-Driven 前提不满足：
 ### 现有的类似解决方案
 
 1. 由摄像头判断哪些位置重要
-   - RPN(region-proposal networks)：一种专用于判断图像重点区域位置的网络
-   - 缺陷：RPN 只在目标较大时效果好；不适用于语义分割
+    - RPN(region-proposal networks)：一种专用于判断图像重点区域位置的网络
+    - 缺陷：RPN 只在目标较大时效果好；不适用于语义分割
 2. 注意力机制
-   - 与本文非常类似，都是关注于重点区域
+    - 与本文非常类似，都是关注于重点区域
 
 ## Motivation
 

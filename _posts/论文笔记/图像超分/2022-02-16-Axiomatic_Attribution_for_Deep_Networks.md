@@ -114,7 +114,9 @@ DeepLift 和 LRP 使用离散梯度来替代梯度，并使用改进的反向传
 
 令函数 $F:\mathbb{R}^n\to [0,1]$ 表示深度网络， $x\in \mathbb{R}^n$ 表示输入， $x_0\in \mathbb{R}^n$ 表示基线输入。那么 $x$ 的第 $i$ 个分量的归因，可以看做是基线 $x_0$ 到输入 $x$ 的直线路径上所有梯度的累计。即分量 $i$ 的归因是 $x_0$ 到 $x$ 直线上的梯度路径积分，正式地定义为：
 
-$$\text {IntegratedGrad}_{i}(x)::=(x_{i}-x_{i}^{\prime}) \times \int_{\alpha=0}^{1} \frac{\partial F\left(x^{\prime}+\alpha \times\left(x-x^{\prime}\right)\right)}{\partial x_{i}} d \alpha$$
+$$
+\text {IntegratedGrad}_{i}(x)::=(x_{i}-x_{i}^{\prime}) \times \int_{\alpha=0}^{1} \frac{\partial F\left(x^{\prime}+\alpha \times\left(x-x^{\prime}\right)\right)}{\partial x_{i}} d \alpha
+$$
 
 其中，$\frac{\partial F(x)}{\partial x_{i}}$ 是 $F(x)$ 在第 $i$ 维度的梯度。
 
@@ -138,13 +140,15 @@ $$\text {IntegratedGrad}_{i}(x)::=(x_{i}-x_{i}^{\prime}) \times \int_{\alpha=0}^
 
 定义 $\gamma=(\gamma_1,\cdots,\gamma_n): [0,1]\to\mathbb{R}^n$ 为一路径，在这里 $\gamma(\alpha)=(\gamma_1(\alpha),\cdots,\gamma_n(\alpha))=x_0+\alpha(x-x_0)$，于是由链式法则有：
 
-$$\begin{aligned}
+$$
+\begin{aligned}
 \sum_{1}^{n} \text {IntegratedGrads}_{i}(x) &=\sum_{1}^{n}\left(\gamma_{i}(1)-\gamma_{i}(0)\right) \int_{0}^{1} \frac{\partial F(\gamma)}{\partial \gamma_{i}} d \alpha \\
 &=\sum_{1}^{n} \int_{0}^{1} \frac{\partial F(\gamma)}{\partial \gamma_{i}} \frac{\partial \gamma_{i}}{\partial \alpha} d \alpha \\
 &=\int_{0}^{1} \frac{\partial F(\gamma)}{\partial \gamma} \cdot \frac{\partial \gamma}{\partial \alpha} d \alpha \\
 &=\int_{0}^{1} \frac{\partial F(\gamma)}{\partial \alpha} d \alpha \\
 &=F(\gamma(1))-F(\gamma(0))=F(x)-F\left(x^{\prime}\right)
-\end{aligned}$$
+\end{aligned}
+$$
 
 对于模型，baseline 一般要求其 $F(x_0)\approx 0$，这样更为方便。
 
@@ -154,12 +158,14 @@ $$\begin{aligned}
 
 即 Completeness 成立是 Sensitivity 成立的充分条件，因为有：
 
-$$\begin{aligned}
+$$
+\begin{aligned}
 \text {IntegratedGrads}_{i}(x) &=\left(\gamma_{i}(1)-\gamma_{i}(0)\right) \int_{0}^{1} \frac{\partial F(\gamma)}{\partial \gamma_{i}} d \alpha \\
 &=\int_{0}^{1} \frac{\partial F(\gamma)}{\partial \gamma_{i}} \frac{\partial \gamma_{i}}{\partial \alpha} d \alpha \\
 &=\int_{0}^{1} \frac{\partial F\left(\gamma\left(\gamma_{i}\right)\right)}{\partial \alpha} d \alpha \\
 &=F\left(\gamma\left(\gamma_{i}(1)\right)\right)-F\left(\gamma\left(\gamma_{i}(0)\right)\right)
-\end{aligned}$$
+\end{aligned}
+$$
 
 当 $x$ 和 $x_0$ 只有 $i$ 维度不同时，则有 $F(\gamma(\gamma_i(1)))-F(\gamma(\gamma_i(0)))=F(\gamma(1))-F(\gamma(0))=F(x)-F(x_0)$，所以 Sensitivity 成立。
 
@@ -185,7 +191,9 @@ Sensitivity(a) 指的是输入和基线仅在一个变量上不同并导致了�
 > 
 > 令 $\gamma=(\gamma_1,\cdots,\gamma_n):[0,1] \to \mathbb{R}^n$ 是 $\mathbb{R}^n$ 上从基线 $x_0$ 到输入 $x$ 的任意路径，其中 $\gamma(0)=x_0$ 并且 $\gamma(1)=x$。那么给定一个路径函数 $\gamma$，则路径方法 (Path Methods) 指的是，沿路径 $\gamma(\alpha)$ 对梯度进行积分，其中 $\alpha \in [0,1]$。更加正式的来说，输入 $x$ 在第 $i$ 维的路径梯度积分 (Path Integrated Gradients) 为：
 
-$$\text{PathIntegratedGrads}\gamma_i(x)::=\int_0^1\frac{\partial F(\gamma(\alpha))}{\partial\gamma_i(\alpha)}\frac{\partial\gamma_i(\alpha)}{\partial\alpha}d\alpha$$
+$$
+\text{PathIntegratedGrads}\gamma_i(x)::=\int_0^1\frac{\partial F(\gamma(\alpha))}{\partial\gamma_i(\alpha)}\frac{\partial\gamma_i(\alpha)}{\partial\alpha}d\alpha
+$$
 
 其中 $\frac{\partial F(\gamma(\alpha))}{\partial\gamma_i(\alpha)}$ 是函数 $F$ 在 $x$ 处沿维度 $i$ 的梯度。基于路径梯度积分的归因方法统称为路径方法 (Path Methods)。
 
@@ -201,7 +209,9 @@ $$\text{PathIntegratedGrads}\gamma_i(x)::=\int_0^1\frac{\partial F(\gamma(\alpha
 
 ##### 2. 路径方法满足公理 Completeness
 
-$$\text{PathIntegratedGrads}^\gamma_i(x)=F(x)-F(x_0)$$
+$$
+\text{PathIntegratedGrads}^\gamma_i(x)=F(x)-F(x_0)
+$$
 
 ##### 3. 路径方法满足公理 Sensitivity(b)
 
@@ -254,7 +264,9 @@ $$\text{PathIntegratedGrads}^\gamma_i(x)=F(x)-F(x_0)$$
 3. 在图像任务中可以选择全黑图像，或者由噪音组成的图像。在文本任务中，使用全 0 的 embedding 是一个较好的选择。
 4. 图像中的全黑图像也代表着一种有意义的输入，但是文本中的全 0 向量完全没有任何有效的意义。
 
-$$\text {IntegratedGrads}_{i}^{ approx}(x)::=\left(x_{i}-x_{i}^{\prime}\right) \times \sum_{k=1}^{m} \frac{\partial F\left(x^{\prime}+\frac{k}{m} \times\left(x-x^{\prime}\right)\right)}{x_{i}} \times \frac{1}{m}$$
+$$
+\text {IntegratedGrads}_{i}^{ approx}(x)::=\left(x_{i}-x_{i}^{\prime}\right) \times \sum_{k=1}^{m} \frac{\partial F\left(x^{\prime}+\frac{k}{m} \times\left(x-x^{\prime}\right)\right)}{x_{i}} \times \frac{1}{m}
+$$
 
 实验证明一般 m 在 20 和 300 之间。
 

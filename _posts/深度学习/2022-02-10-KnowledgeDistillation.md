@@ -1,3 +1,15 @@
+---
+title: "知识蒸馏"
+subtitle: "Distilling the Knowledge in a Neural Network"
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-37.jpg"
+mathjax: true
+tags:
+  - 深度学习
+  - 知识蒸馏
+---
+
 # 知识蒸馏
 
 Knowledge Distillation
@@ -49,7 +61,7 @@ Knowledge Distillation，简称 KD，顾名思义，就是将已经训练好的�
 知识蒸馏使用的是 Teacher—Student 模型，其中 teacher 是“知识”的输出者，student 是“知识”的接受者。知识蒸馏的过程分为 2 个阶段：
 
 1. 原始模型训练：训练"Teacher 模型"，简称为 Net-T，它的特点是模型相对复杂，也可以由多个分别训练的模型集成而成。我们对"Teacher 模型"不作任何关于模型架构、参数量、是否集成方面的限制，唯一的要求就是，对于输入 X，其都能输出 Y，其中 Y 经过 softmax 的映射，输出值对应相应类别的概率值。
-1. 精简模型训练：训练"Student 模型"，简称为 Net-S，它是参数量较小、模型结构相对简单的单模型。同样的，对于输入 X，其都能输出 Y，Y 经过 softmax 映射后同样能输出对应相应类别的概率值。
+2. 精简模型训练：训练"Student 模型"，简称为 Net-S，它是参数量较小、模型结构相对简单的单模型。同样的，对于输入 X，其都能输出 Y，Y 经过 softmax 映射后同样能输出对应相应类别的概率值。
 
 在本论文中，作者将问题限定在**分类问题**下，或者其他本质上属于分类问题的问题，该类问题的共同点是模型最后会有一个 softmax 层，其输出值对应了相应类别的概率值。
 
@@ -68,13 +80,17 @@ Knowledge Distillation，简称 KD，顾名思义，就是将已经训练好的�
 
 先回顾一下原始的 softmax 函数：
 
-$$q_i=\frac{e^{z_i}}{\sum_je^{z_j}}$$
+$$
+q_i=\frac{e^{z_i}}{\sum_je^{z_j}}
+$$
 
 但要是直接使用 softmax 层的输出值作为 soft target，这又会带来一个问题：当 softmax 输出的概率分布熵相对较小时，负标签的值都很接近 0，对损失函数的贡献非常小，小到可以忽略不计。因此“**温度**”这个变量就派上了用场。
 
 下面的公式时加了温度这个变量之后的 softmax 函数：
 
-$$q_i=\frac{e^{z_i/T}}{\sum_je^{z_j/T}}$$
+$$
+q_i=\frac{e^{z_i/T}}{\sum_je^{z_j/T}}
+$$
 
 这里的 T 就是**温度**。
 原来的 softmax 函数是 T = 1 的特例。 T 越高，softmax 的 output probability distribution 越趋于平滑，其分布的熵越大，负标签携带的信息会被相对地放大，模型训练将更加关注负标签。
@@ -89,7 +105,9 @@ $$q_i=\frac{e^{z_i/T}}{\sum_je^{z_j/T}}$$
 
 训练 Net-T 的过程很简单，下面详细讲讲第二步：高温蒸馏的过程。高温蒸馏过程的目标函数由 distill loss（对应 soft target) 和 student loss（对应 hard target) 加权得到。示意图如上。
 
-$$L=\alpha L_{soft}+\beta L_{hard}$$
+$$
+L=\alpha L_{soft}+\beta L_{hard}
+$$
 
 - $v_i$：Net-T 的 logits
 - $z_i$：Net-S 的 logits
@@ -100,21 +118,31 @@ $$L=\alpha L_{soft}+\beta L_{hard}$$
 
 Net-T 和 Net-S 同时输入训练集（这里可以直接复用训练 Net-T 用到的训练集），用 Net-T 产生的 softmax distribution (with high temperature) 来作为 soft target，Net-S 在相同温度 T 条件下的 softmax 输出和 soft target 的 cross entropy 就是 Loss 函数的第一部分$L_{soft}$：
 
-$$L_{soft}=-\sum_j^Np_i^Tlog(q_j^T)$$
+$$
+L_{soft}=-\sum_j^Np_i^Tlog(q_j^T)
+$$
 
 其中：
 
-$$p_i=\frac{e^{v_i/T}}{\sum_k^Ne^{v_k/T}}$$
+$$
+p_i=\frac{e^{v_i/T}}{\sum_k^Ne^{v_k/T}}
+$$
 
-$$q_i=\frac{e^{z_i/T}}{\sum_k^Ne^{z_k/T}}$$
+$$
+q_i=\frac{e^{z_i/T}}{\sum_k^Ne^{z_k/T}}
+$$
 
 Net-S 在 T=1 的条件下的 softmax 输出和 ground truth 的 cross entropy 就是 Loss 函数的第二部分$L_{hard}$：
 
-$$L_{hard}=-\sum_j^Nc_ilog(q_j^1)$$
+$$
+L_{hard}=-\sum_j^Nc_ilog(q_j^1)
+$$
 
 其中：
 
-$$q_i^1=\frac{e^{z_i}}{\sum_k^Ne^{z_k}}$$
+$$
+q_i^1=\frac{e^{z_i}}{\sum_k^Ne^{z_k}}
+$$
 
 第二部分 Loss $L_{hard}$ 的必要性其实很好理解：Net-T 也有一定的错误率，使用 ground truth 可以有效降低错误被传播给 Net-S 的可能。打个比方，老师虽然学识远远超过学生，但是他仍然有出错的可能，而这时候如果学生在老师的教授之外，可以同时参考到标准答案，就可以有效地降低被老师偶尔的错误“带偏”的可能性。
 
@@ -136,15 +164,21 @@ $$
 
 如果再加上 logits 是零均值的假设：
 
-$$\sum_j z_j/T=\sum_j v_j/T=0$$
+$$
+\sum_j z_j/T=\sum_j v_j/T=0
+$$
 
 那么上面的公式可以简化成：
 
-$$\frac{\partial L_{soft}}{\partial z_i} \approx \frac{1}{NT^2}(z_i-v_i)$$
+$$
+\frac{\partial L_{soft}}{\partial z_i} \approx \frac{1}{NT^2}(z_i-v_i)
+$$
 
 也就是等价于 minimise 下面的损失函数：
 
-$$ L_{soft}' = \frac{1}{2} (z_i-v_i)^2 $$
+$$
+L_{soft}' = \frac{1}{2} (z_i-v_i)^2 
+$$
 
 ## 讨论
 
@@ -172,8 +206,8 @@ $$ L_{soft}' = \frac{1}{2} (z_i-v_i)^2 $$
 在回答这个问题之前，先讨论一下**温度 $T$ 的特点**
 
 1. 原始的 softmax 函数是 $T=1$ 时的特例，$T<1$ 时，概率分布比原始更“陡峭”，$T>1$ 时，概率分布比原始更“平缓”。
-1. 温度越高，softmax 上各个值的分布就越平均（思考极端情况：(i) $T=\infin$，此时 softmax 的值是平均分布的；(ii) $T\rightarrow 0$，此时 softmax 的值就相当于 argmax，即最大的概率处的值趋近于 1，而其他值趋近于 0）
-1. 不管温度 T 怎么取值，Soft target 都有忽略相对较小的 $p_i$ 携带的信息的倾向
+2. 温度越高，softmax 上各个值的分布就越平均（思考极端情况：(i) $T=\infin$，此时 softmax 的值是平均分布的；(ii) $T\rightarrow 0$，此时 softmax 的值就相当于 argmax，即最大的概率处的值趋近于 1，而其他值趋近于 0）
+3. 不管温度 T 怎么取值，Soft target 都有忽略相对较小的 $p_i$ 携带的信息的倾向
 
 ### 温度代表了什么，如何选取合适的温度？
 
@@ -182,6 +216,6 @@ $$ L_{soft}' = \frac{1}{2} (z_i-v_i)^2 $$
 实际上，负标签中包含一定的信息，尤其是那些值显著**高于**平均值的负标签。但由于 Net-T 的训练过程决定了负标签部分比较 noisy，并且负标签的值越低，其信息就越不可靠。因此温度的选取比较 empirical，本质上就是在下面两件事之中取舍：
 
 1. 从有部分信息量的负标签中学习 -> 温度要高一些
-1. 防止受负标签中噪声的影响 ->温度要低一些
+2. 防止受负标签中噪声的影响 ->温度要低一些
 
 总的来说，T 的选择和 Net-S 的大小有关，Net-S 参数量比较小的时候，相对比较低的温度就可以了（因为参数量小的模型不能 capture all knowledge，所以可以适当忽略掉一些负标签的信息）

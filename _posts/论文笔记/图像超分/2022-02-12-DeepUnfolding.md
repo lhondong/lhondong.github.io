@@ -1,3 +1,15 @@
+---
+title: "Deep Unfolding Network for Image Super-Resolution"
+subtitle: ""
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-34.jpg"
+mathjax: true
+tags:
+  - 图像超分
+  - 光学模型
+---
+
 # Deep Unfolding Network for Image Super-Resolution
 
 ## 摘要
@@ -21,7 +33,7 @@
 
 Deep Unfolding 是前人已有的研究，是一种基于光学模型的迭代求解方法
 
-参考论文：《Learning Deep CNN Denoiser Prior for Image Restoration》
+参考论文：Learning Deep CNN Denoiser Prior for Image Restoration
 
 ### 图像降质的光学模型
 
@@ -54,10 +66,12 @@ $$
 
 半二次分裂近似问题：
 
-$$\begin{aligned}
+$$
+\begin{aligned}
 &min_{x,z}&f(x)+g(z)\\
 &s.t.&x=z
-\end{aligned}$$
+\end{aligned}
+$$
 
 增广拉格朗日：
 
@@ -71,7 +85,8 @@ $$
 \left\{\begin{aligned}
 z_{k+1}&=argmin_z f(x_k)+g(z)+\frac{\mu}{2}\parallel x_k-z\parallel^2\\
 x_{k+1}&=argmin_x f(x)+g(z_k)+\frac{\mu}{2}\parallel x-z_k\parallel^2\\
-\end{aligned}\right.$$
+\end{aligned}\right.
+$$
 
 固定 $x$ 优化 $z$、固定 $z$ 优化 $x$，如此循环往复逼近最优解。
 

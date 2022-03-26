@@ -11,7 +11,7 @@ tags:
   - GAN
 ---
 
-# The Perception-Distortion Tradeoff
+# The Perception-Distortion Trade-off
 
 Israel Institute of Technology
 

@@ -1,4 +1,16 @@
-## Softmax 与多分类 SVM 的区别
+---
+title: "Softmax vs. SVM"
+subtitle: "Softmax 与多分类 SVM 的区别"
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-34.jpg"
+mathjax: true
+tags:
+  - 机器学习
+  - 深度学习
+---
+
+# Softmax 与多分类 SVM 的区别
 
 针对一个数据点，SVM 和 Softmax 分类器的不同处理方式的例子。两个分类器都计算了同样的分值向量 $f$（本节中是通过矩阵乘来实现）。不同之处在于对 $f$ 中分值的解释：SVM 分类器将它们看做是分类评分，它的损失函数鼓励正确的分类（本例中是蓝色的类别 2) 的分值比其他分类的分值高出至少ー个边界值。
 
