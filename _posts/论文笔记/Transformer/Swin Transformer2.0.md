@@ -34,13 +34,13 @@ Swin Transformer 的核心思想在于将具有很强建模能力的 Transformer
 
 在进一步扩大模型容量的过程中，作者发现训练过程存在严重的不稳定性问题。如图 2 所示，随着原始 Swin Transformer 模型从小变大，网络深层的激活值会急剧增加，拥有 2 亿参数的 Swin-L 模型，其幅值最高和最低层之间的差异可以达到 $10^4$。当进一步将模型容量扩大到 6.58 亿参数，它会在训练过程中崩溃。
 
-<div align=center><img src="/assets/Swin Transformer2.0-2022-03-29-14-14-19.png" alt="Swin Transformer2.0-2022-03-29-14-14-19.png" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/Swin Transformer2.0-2022-03-29-14-14-19.png" alt="Swin Transformer2.0-2022-03-29-14-14-19" style="zoom:50%;" /></div>
 
 仔细观察原始 Swin Transformer 的架构，这是由于残差分支的输出直接加回主分支而导致的。原始的 Swin Transformer（以及绝大多数视觉 Transformer）在每个残差分支的开始都使用了预归一化（pre-normalization），它可以归一化输入的幅值，但对输出没有限制。在预归一化下，每个残差分支的输出激活值会直接合并回主分支，并被逐层累加，因而主分支的幅值会随着深度的增加而越来越大。这种不同层的幅值差异很大程度上导致了训练的不稳定性。
 
 为了缓解这一问题，作者提出了一种新的归一化方式，称为**残差后归一化（residual-post-normalization）**。如下图所示，该方法将归一化层从每个残差分支的开始移到末尾，这样每个残差分支的输出在合并回主分支之前都会被归一化，当层数加深时，主分支的幅度将不会被累加。实验发现，**这种新的归一化方式使得网络各层的激活值变得更加温和**。
 
-<div align=center><img src="/assets/Swin Transformer2.0-2022-03-29-14-14-45.png" alt="Swin Transformer2.0-2022-03-29-14-14-45.png" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/Swin Transformer2.0-2022-03-29-14-14-45.png" alt="Swin Transformer2.0-2022-03-29-14-14-45" style="zoom:50%;" /></div>
 
 除此之外，随着模型变大，在原始的自注意力计算中，某些层的注意力权重往往会被几个特定的点所支配，特别是在使用后注意力的情况下。为了缓解这一问题，还提出了**缩放的余弦注意力机制（scaled cosine attention）**，它可以取代之前的点乘注意力机制。在缩放的余弦注意力机制中，自注意力的计算与输入的幅值无关，从而可以产生更温和的注意力权重。
 
@@ -60,7 +60,7 @@ Swin Transformer 的核心思想在于将具有很强建模能力的 Transformer
 
 训练越大的模型往往需要越多的数据，而相比 NLP，计算机视觉领域缺乏蕴含人类监督信息的数据来支撑大模型的训练。这就要求视觉领域在训练大模型时，要减少对标注数据的依赖，需要在更少量数据的情况下探索大模型。对此，作者通过**引入自监督学习的掩码模型 SimMIM **来缓解这一问题。如图所示，SimMIM 通过掩码图像建模（masked image modeling）来学习更好的图像表征。它采用随机掩码策略，用适度大的掩码块对输入图像做掩码；同时，通过直接回归来预测原始像素的 RGB 值；由于该模型的预测头很轻，所以只需要一层线性层即可。
 
-<div align=center><img src="/assets/Swin Transformer2.0-2022-03-29-14-15-05.png" alt="Swin Transformer2.0-2022-03-29-14-15-05.png" style="zoom:100%;" /></div>
+<div align=center><img src="/assets/Swin Transformer2.0-2022-03-29-14-15-05.png" alt="Swin Transformer2.0-2022-03-29-14-15-05" style="zoom:100%;" /></div>
 
 SimMIM 非常简单且高效，借助 SimMIM，Swin Transformer v2.0** 降低了对标注数据的需求**，最终只用了 7000 万张带有噪声标签的图像就训练了 30 亿参数的模型。
 

@@ -26,3 +26,27 @@ ETH Zurich Vision Lab
 此外，在以往的基于学习的方法的熵编码中，对每个帧独立估计潜表示的PMF，这样忽略了相邻帧之间潜表示的相关性。类比像素域中的参考帧，充分利用latent domain中的相关性也有利于潜表示的压缩。
 
 Intuitively, the temporal correlation in the latent domain also can be explored in a recurrent manner.
+
+$$
+q_{t}\left(\boldsymbol{y}_{t} \mid \boldsymbol{y}_{1}, \ldots, \boldsymbol{y}_{t-1}\right)=\prod_{i=1}^{N} q_{i t}\left(y_{i t} \mid \boldsymbol{y}_{1}, \ldots, \boldsymbol{y}_{t-1}\right)
+$$
+
+$$
+q_{i t}\left(y_{i t} \mid \boldsymbol{y}_{1}, \ldots, \boldsymbol{y}_{t-1}\right)=\int_{y_{i t}-0.5}^{y_{i t}+0.5} \operatorname{Logistic}\left(y ; \mu_{i t}, s_{i t}\right) dy
+$$
+
+$$
+\operatorname{Logistic}(y ; \mu, s)=\frac{\exp (-(y-\mu) / s)}{s(1+\exp (-(y-\mu) / s))^{2}}
+$$
+
+$$
+\int \operatorname{Logistic}(y ; \mu, s) d y=\operatorname{Sigmod}(y ; \mu, s)+C
+$$
+
+$$
+R_{\mathrm{RPM}}\left(\boldsymbol{y}_{t}\right) =-\log _{2}\left(q_{t}\left(\boldsymbol{y}_{t} \mid \boldsymbol{y}_{1}, \ldots, \boldsymbol{y}_{t-1}\right)\right) =\sum_{i=1}^{N}-\log _{2}\left(q_{i t}\left(y_{i t} \mid \boldsymbol{y}_{1}, \ldots, \boldsymbol{y}_{t-1}\right)\right)
+$$
+
+$$
+\mathcal{L}_{1}=\lambda \cdot D\left(\boldsymbol{f}_{1}, \hat{\boldsymbol{f}}_{1}\right)+R_{1}\left(\boldsymbol{y}_{1}^{m}\right)+R_{1}\left(\boldsymbol{y}_{1}^{r}\right)
+$$
