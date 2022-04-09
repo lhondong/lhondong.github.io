@@ -1,0 +1,216 @@
+---
+title: "VQ-VAE"
+subtitle: "Neural Discrete Representation Learning"
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-35.jpg"
+mathjax: true
+tags:
+  - 深度学习
+  - 生成模型
+---
+
+# VQ-VAE
+
+Neural Discrete Representation Learning
+
+NIPS 2017
+
+Google
+
+作为一个自编码器，VQ-VAE 的一个明显特征是它编码出的编码向量是离散的，换句话说，它最后得到的编码向量的每个元素都是一个整数，这也就是“Quantised”的含义。  
+
+- VQ-VAE 其实就是一个 AE（自编码器）而不是 VAE（变分自编码器）
+- VQ-VAE 的核心步骤之一是 Straight-Through Estimator，这是将隐变量离散化后的优化技巧
+
+## 自回归模型
+
+VQ-VAE 做生成模型的思路，源于 PixelRNN、PixelCNN 之类的自回归模型，这类模型留意到我们要生成的图像，实际上是离散的而不是连续的。以 CIFAR-10 的图像为例，它是 32×32 大小的 3 通道图像，换言之它是一个 32×32×3 的矩阵，矩阵的每个元素是 0～255 的任意一个整数，这样一来，我们可以将它看成是一个长度为 32×32×3=3072 的句子，而词表的大小是 256，从而用语言模型的方法，来逐像素地、递归地生成一张图片（传入前面的所有像素，来预测下一个像素），这就是所谓的自回归方法：
+
+$$
+p(x)=p(x_1)p(x_2|x_1)\dots p(x_{3n^2}|x_1,x_2,\dots,x_{3n^2-1})
+$$
+
+其中 $p(x_1),p(x_2|x_1),\dots,p(x_{3n^2}|x_1,x_2,\dots,x_{3n^2-1})$ 每一个都是 256 分类问题，只不过所依赖的条件有所不同。
+
+自回归模型的研究主要集中在两方面：
+
+- 一方面是如何设计这个递归顺序，使得模型可以更好地生成采样，因为图像的序列不是简单的一维序列，它至少是二维的，更多情况是三维的，这种情况下你是“从左往右再从上到下”、“从上到下再从左往右”、“先中间再四周”或者是其他顺序，都很大程度上影响着生成效果；
+- 另一方面是研究如何加速采样过程。
+
+自回归的方法很稳妥，也能有效地做概率估计，但它有一个最致命的缺点：**慢**。因为它是逐像素地生成的，所以要每个像素地进行随机采样，上面举例的 CIFAR-10 已经算是小图像的，目前做图像生成要做到 128×128×3，总像素接近 5 万个（想想看要生成一个长度为 5 万的句子），真要逐像素生成会非常耗时。而且这么长的序列，不管是 RNN 还是 CNN 模型都无法很好地捕捉这么长的依赖。
+
+原始的自回归还有一个问题，就是割裂了类别之间的联系。虽然说因为每个像素是离散的，所以看成 256 分类问题也无妨，但事实上连续像素之间的差别是很小的，纯粹的分类问题捕捉到这种联系。
+
+更数学化地说，就是我们的目标函数交叉熵是 $-\log p_t$，假如目标像素是 100，如果我预测成 99，因为类别不同了，那么 $p_t$ 就接近于 0，$-\log p_t$ 就很大，从而带来一个很大的损失。但从视觉上来看，像素值是 100 还是 99 差别不大，不应该有这么大的损失。
+
+## VQ-VAE
+
+VAE 在 AE 的基础上加了一个限制，即让 $z$ 满足各向同性 Gaussian 分布 （称之为 prior，先验分布）。这样做的好处就是，训练结束后，我们可以扔掉 Encoder，直接从这个 prior 上随便采一个 $z$，然后通过 Decoder 就能生成一个 $x$（比如一张图片）。
+
+VAE 的训练则要从概率的角度去理解一下。$z = encode(x)$ 这个过程如果从概率的角度看，就是让 Encoder 去学习一个条件概率 $q_\phi(z\vert x)$，而 Decoder 则学习另一个条件概率 $p_\theta(x\vert x)$。同时我们要让 $z$ 服从一个 Gaussian prior，我们把这个 prior 记做 $p(x)$。 这样，loss 函数就可以写了：
+
+$$
+\text{ELBO}(\theta,\phi) = \mathbb E_{z\sim q_\theta(z \vert x)}[\log p_\phi(x \vert z)] + \mathbb{KL}\big(q_\theta(z \vert x) \Vert P(z)\big)
+$$
+
+ELBO 即 evidence low bound；evidence 指的就是 $x$，而 ELBO 表示 evidence 的最小期望。我们让这个 lower bound 尽可能变大，得到的概率模型就会更可能产生我们这里看到的 $x$。
+
+针对自回归模型的固有毛病，VQ-VAE 提出的解决方案是：先降维，然后再对编码向量用 PixelCNN 建模。
+
+### 降维离散化
+
+VAE 的隐变量 $z$ 的每一维都是一个连续的值，而 VQ-VAE 最大的特点就是，$z$ 的每一维都是离散的整数。这样做符合一些自然界的模态 (a more natural fit for many of the modalities)。比如 Language 是 a sequence of symbols or reasoning, planning and predictive learning。因此，VQ-VAE 可以对数据空间中跨越多个维度的重要特征进行有效建模（比如图片里某个 object 会覆盖很多 pixel，音频中一个 phoneme 会持续很多 samples/frames），而不会去学一些特别细节的东西。
+
+看上去这个方案很自然，似乎没什么特别的，但事实上一点都不自然。
+
+因为 PixelCNN 生成的离散序列，想用 PixelCNN 建模编码向量，那就意味着编码向量也是离散的才行。而变维自编码器生成的编码向量都是连续性变量，无法直接生成离散变量。同时，生成离散型变量往往还意味着存在梯度消失的问题。还有，降维、重构这个过程，如何保证重构之后出现的图像不失真？如果失真得太严重，甚至还比不上普通的 VAE 的话，那么 VQ-VAE 也没什么存在价值了。
+
+幸运的是，VQ-VAE 确实提供了有效的训练策略解决了这两个问题。
+
+将 $z$ 离散化的关键就是 VQ，即 vector quatization。简单来说，就是要先有一个 codebook，这个 codebook 是一个 embedding table。我们在这个 table 中找到和 vector 最接近（比如欧氏距离最近）的一个 embedding，用这个 embedding 的 index 来代表这个 vector。
+
+### 最邻近重构
+
+在 VQ-VAE 中，一张 $n\times n\times 3$ 的图片 $x$ 先被传入一个 Encoder 中，得到连续的编码向量 $z$：
+
+$$
+z = encoder(x)
+$$
+
+这里的 $z$ 是一个大小为 $d$ 的向量。另外，VQ-VAE 还维护一个 Embedding 层，我们也可以称为编码表，记为：
+
+$$
+E = [e_1, e_2, \dots, e_K]
+$$
+
+这里每个 $e_i$ 都是一个大小为 $d$ 的向量。接着，VQ-VAE 通过最邻近搜索，将 $z$ 映射为这 $K$ 个向量之一：
+
+$$
+z\to e_k,\quad k = \mathop{\arg\min}_j \Vert z - e_j\Vert_2
+$$
+
+我们可以将 $z$ 对应的编码表向量记为 $z_q$，我们认为 $z_q$ 才是最后的编码结果。最后将 $z_q$ 传入一个 Decoder，希望重构原图 $\hat{x}=decoder(z_q)$。
+
+整个流程是：
+
+$$
+x\xrightarrow{encoder} z \xrightarrow{\text{最邻近}} z_q \xrightarrow{decoder}\hat{x}
+$$
+
+这样一来，因为 $z_q$ 是编码表 $E$ 中的向量之一，所以它实际上就等价于 $1,2,\dots,K$ 这 $K$ 个整数之一，因此这整个流程相当于将整张图片编码为了一个整数。
+
+当然，上述过程是比较简化的，如果只编码为一个向量，重构时难免失真，而且泛化性难以得到保证。所以实际编码时直接用多层卷积将 $x$ 编码为 $m\times m$ 个大小为 $d$ 的向量：
+
+$$
+z = \begin{pmatrix}z_{11} & z_{12} & \dots & z_{1m}\\
+z_{21} & z_{22} & \dots & z_{2m}\\
+\vdots & \vdots & \ddots & \vdots\\
+z_{m1} & z_{m2} & \dots & z_{mm}\\
+\end{pmatrix}
+$$
+
+也就是说，$z$ 的总大小为 $m\times m\times d$，它依然保留着位置结构，然后每个向量都用前述方法映射为编码表中的一个，就得到一个同样大小的 $z_q$，然后再用它来重构。这样一来，$z_q$ 也等价于一个 $m\times m$ 的整数矩阵，这就实现了离散型编码。
+
+<div align=center><img src="/assets/VQVAE-2022-04-07-21-54-48.png" alt="VQVAE-2022-04-07-21-54-48" style="zoom:50%;" /></div>
+
+1. Codebook 是一个 $K\times D$ 的 table，对应上方紫色的 $[e_1, e_2, \dots, e_K]$。
+2. 将一张图片经过 Encoder 后，可以得到一个 $H'\times W'\times D$ 的 feature map，即绿色的 $z_e(x)$。
+3. 将这 $H'\times W'$ 个 $D$ 维向量分别去 codebook 里找到最近的 $e_i$ ，用其 index 表示，就得到了青色的 $q(z\vert x)$。
+4. 把绿色的 $z_e(x)$ 用 codebook 里最近的 $e_i$ 替换后可以得到紫色的 $z_q(x)$ ，这是 decoder 的输入，然后 reconstruct 得到图片。
+
+从 $z_e(x)$ 到 $z_q(x)$ 这个变化可以看成一个聚类，即把 encoder 得到的乱七八糟的向量用 codebook 里离它最近的一个 embedding 代表；也可以看成一个特殊的 non-linear transformation。
+
+多提一句，$q(z\vert x)$ 里每个数字都是一个离散的整数，我们可以把这个数字写成 one-hot 的形式，从而看成一个概率分布，总共有 $K$ 维，每一维代表对应 codebook 里 $e_i,(i=1,2,\dots K)$ 的概率。从 VAE 的角度来看，我们给这个 $K$ 维分布一个均匀分布作为先验，即 $p_i=\frac{1}{K}$ ，从而 ELBO 中 $\mathbb{KL}\big(q_\theta(z \vert x) \Vert p(z)\big)$ 这一项就变成了一个常数：
+
+$$
+1 \cdot \log(\frac{1}{\frac{1}{K}})+(K-1)\times 0 \cdot \log(\frac{1}{\frac{1}{K}})=\log(K)
+$$
+
+第一项表示 one-hot 中为 1 的那一维对 KL 散度的贡献，第二项代表其他维的贡献。
+
+### 自行设计梯度
+
+我们知道，如果是普通的自编码器，直接用下述 loss 进行训练即可：
+
+$$
+\Vert x - decoder(z)\Vert_2^2
+$$
+
+但是，在 VQ-VAE 中，我们用来重构的是 $z_q$ 而不是 $z$，那么似乎应该用这个 loss 才对：
+
+$$
+\Vert x - decoder(z_q)\Vert_2^2
+$$
+
+但问题是 $z_q$ 的构建过程包含了 $\arg\min$，这个操作是没梯度的，所以如果用第二个 loss 的话，没法更新 $encoder$。
+
+换言之，我们的目标其实是 $\Vert x - decoder(z_q)\Vert_2^2$ 最小，但是却不好优化，而 $\Vert x - decoder(z)\Vert_2^2$ 容易优化，但却不是我们的优化目标。那怎么办呢？当然，一个很粗暴的方法是两个都用：
+
+$$
+\Vert x - decoder(z)\Vert_2^2 + \Vert x - decoder(z_q)\Vert_2^2
+$$
+
+但这样并不好，因为最小化 $\Vert x - decoder(z)\Vert_2^2$ 并不是我们的目标，会带来额外的约束。
+
+VQ-VAE 使用了一个很精巧也很直接的方法，Straight-Through Estimator，也可以称之为“直通估计”，它最早源于 Benjio 的论文 [Estimating or Propagating Gradients Through Stochastic Neurons for Conditional Computation](https://arxiv.org/abs/1308.3432)。
+
+事实上 Straight-Through 的思想很简单，就是前向传播的时候可以用想要的变量（哪怕不可导），而反向传播的时候，用你自己为它所设计的梯度。根据这个思想，我们设计的目标函数是：
+
+$$
+\Vert x - decoder(z + sg[z_q - z])\Vert_2^2
+$$
+
+其中 $sg$ 是 stop gradient 的意思，就是不要它的梯度。这样一来，前向传播计算（求 loss）的时候，就直接等价于 $decoder(z + z_q - z)=decoder(z_q)$，然后反向传播（求梯度）的时候，由于 $z_q - z$ 不提供梯度，所以它也等价于 $decoder(z)$，这个就允许我们对 $encoder$ 进行优化了。
+
+顺便说一下，基于这个思想，我们可以为很多函数自己自定义梯度，比如 $x + sg[\text{ReLU}(x) - x]$ 就是将 $\text{ReLU}(x)$的梯度定义为恒为 1，但是在误差计算是又跟$\text{ReLU}(x)$本身等价。当然，用同样的方法我们可以随便指定一个函数的梯度，至于有没有实用价值，则要具体任务具体分析了。
+
+### 维护编码表
+
+要注意，根据 VQ-VAE 的最邻近搜索的设计，我们应该期望 $z_q$ 和 $z$ 是很接近的（事实上编码表 $E$ 的每个向量类似各个 $z$ 的聚类中心出现），但事实上未必如此，即使 $\Vert x - decoder(z)\Vert_2^2$ 和 $\Vert x - decoder(z_q)\Vert_2^2$ 都很小，也不意味着 $z_q$ 和 $z$ 差别很小（即 $f(z_1)=f(z_2)$ 不意味着 $z_1 = z_2$）。
+
+所以，为了让 $z_q$ 和 $z$ 更接近，我们可以直接地将 $\Vert z - z_q\Vert_2^2$ 加入到 loss 中：
+
+$$
+\Vert x - decoder(z + sg[z_q - z])\Vert_2^2 + \beta \Vert z - z_q\Vert_2^2
+$$
+
+除此之外，还可以做得更仔细一些。由于编码表（$z_q$）相对是比较自由的，而 $z$ 要尽力保证重构效果，所以我们应当尽量“让 $z_q$ 去靠近 $z$”而不是“让 $z$ 去靠近 $z_q$”，而因为 $\Vert z_q - z\Vert_2^2$ 的梯度等于对 $z_q$ 的梯度加上对 $z$ 的梯度，所以我们将它等价地分解为
+
+$$
+\Vert sg[z] - z_q\Vert_2^2 + \Vert z - sg[z_q]\Vert_2^2
+$$
+
+第一项相等于固定 $z$，让 $z_q$ 靠近 $z$，第二项则反过来固定 $z_q$，让 $z$ 靠近 $z_q$。注意这个“等价”是对于反向传播（求梯度）来说的，对于前向传播（求 loss）它是原来的两倍。根据我们刚才的讨论，我们希望“让 $z_q$ 去靠近 $z$”多于“让 $z$ 去靠近 $z_q$”，所以可以调一下最终的 loss 比例：
+
+$$
+\Vert x - decoder(z + sg[z_q - z])\Vert_2^2 + \beta \Vert sg[z] - z_q\Vert_2^2 + \gamma \Vert z - sg[z_q]\Vert_2^2
+$$
+
+其中 $\gamma < \beta$，在原论文中使用的是 $\gamma = 0.25 \beta$。
+
+（注：还可以用滑动评论的方式更新编码表，详情请看原论文。）
+
+### 拟合编码分布
+
+经过上述设计之后，终于将图片编码为了 $m\times m$ 的整数矩阵了，由于这个 $m\times m$ 的矩阵一定程度上也保留了原来输入图片的位置信息，所以我们可以用自回归模型比如 PixelCNN，来对编码矩阵进行拟合（即建模先验分布）。通过 PixelCNN 得到编码分布后，就可以随机生成一个新的编码矩阵，然后通过编码表 $E$ 映射为浮点数矩阵 $z_q$，最后经过 Decoder 得到一张图片。
+
+一般来说，现在的 $m\times m$ 比原来的 $n\times n\times 3$ 要小得多，比如在用 CelebA 数据做实验的时候，原来 $128\times 128\times 3$ 的图可以编码为 $32\times 32$ 的编码而基本不失真，所以用自回归模型对编码矩阵进行建模，要比直接对原始图片进行建模要容易得多。
+
+## 损失函数
+
+$$
+\mathcal L=\log p(x\vert z_q(x) )+ \beta \Vert sg[z_e(x)] - e\Vert_2^2 + \gamma \Vert z_e(x) - sg[e]\Vert_2^2
+$$
+
+第一项用来训练 encoder 和 decoder。从上面图中的红线可以看出，bp 的时候 $z_q(x)$ 的梯度直接 copy 给 $z_e(x)$ ，而不给 codebook 里的 embedding，所以这一项只训练 encoder 和 decoder。
+
+第二项叫 codebook loss，只训练 codebook，让 codebook 中的 embedding 向各自最近的 $z_e(x)$ 靠近。
+
+第三项叫 commitment loss，只训练 encoder，目的是 encourage the output of encoder to stay close to the chosen codebook vector to prevent it from flucturating too frequently from one code vector to another，即防止 encoder 的输出频繁在各个 codebook embedding 之间跳。
+
+到这，VQ-VAE 的训练就搞定了。但是前面我们说到，VAE 的目的是训练完成后，丢掉 encoder，在 prior 上直接采样，加上 decoder 就能生成。如果我们现在独立地采 $H'\times W'$ 个 $z$，然后查表得到维度为 $H'\times W' \times D$ 的 $z_q(x)$，那么生成的图片在空间上的每块区域之间几乎就是独立的。因此我们需要让各个 $z$ 之间有关系，因此用 PixelCNN，对这些 $z$ 建立一个 autoregressive model: $p(z_1,z_2,\dots)=p(z_1)p(z_2|z_1)\dots$ ，这样就可以进行 ancestral sampling，得到一个互相之间有关联的 $H'\times W'$ 的整数矩阵；$p(z_1,z_2,\dots)$ 这个联合概率即为我们想要的 prior。
+
+如果弄懂了 VQ-VAE，那么它新出的 2.0 版本也就没什么难理解的了，VQ-VAE-2 相比 VQ-VAE 几乎没有本质上的技术更新，只不过把编码和解码都分两层来做了（bottom 层对 local feature 进行建模，top 层对 global feature 进行建模），同时为了让 top 层能更有效地提取 global 信息，在网络中加入了 self attention，从而使得生成图像的模糊感更少（相比至少是少很多了，但其实你认真看 VQ-VAE-2 的大图，还是有略微的模糊感的）。
+
+除此之外，在 prior 上进行采样的时候，考虑到 autoregressive 的 sample 会累积误差，即如果 $x_1$ 出现了一点误差，那么由于 $x_2\vert x_1$ 的误差会更大，以此类推。因此加入了 rejection sampling，即生成某类的图片后，通过一个 classifier 判断一下生成的图片像不像这个类的 sample，如果不像就舍弃掉。

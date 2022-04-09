@@ -58,5 +58,5 @@ e(t)=\left\|z_{o p t}-\tilde{z}_{t}\right\|_{2}
 $$
 
 $$
-S(t)=1-\frac{e(t)-\min _{\tau}(e(\tau))}{\max _{\tau}(e(\tau))}, \quad \tau=t-T, t-T+1, \cdots, t
+S(t)=1-\frac{e(t)-\min _{\tau}(e(\tau))}{\max _{\tau}(e(\tau))}, \quad \tau=t-T, t-T+1, \dots, t
 $$

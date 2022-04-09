@@ -1,7 +1,9 @@
 
-# An Illustrative Guide to Masked Image Modelling
+# Masked Image Modelling
 
 Masked image modelling can provide competitive results to the other approaches like contrastive learning. Performing computer vision tasks using masked images can be called masked image modelling.
+
+使用掩码图像进行 CV 任务。
 
 In machine learning, nowadays, we can see that the models and techniques of one domain can perform tasks of other domains. For example, models focused on natural language processing can also perform a few tasks related to computer vision. In this article, we will discuss such a technique that is transferable from NLP to computer vision. When applying it to the computer vision tasks, we can call it Masked Image Modelling. We will try to understand the working of this technique along with its important applications.
 
@@ -12,7 +14,7 @@ In machine learning, masked signal learning is a type of learning where the mask
 Applying masked image modelling can have the following difficulties:
 
 - Pixels near to each other are highly correlated.
-- Signals under the images are raw and low level in comparison to the signal (tokens) under the NLP data.(CV中低语义)
+- Signals under the images are raw and low level in comparison to the signal (tokens) under the NLP data.(CV 中底层语义）
 - Signals in image data are continuous while text signals are discrete.
 
 So applying this approach to image or computer vision-related data, requires the procedure to be accomplished very well so that correlation can be avoided. Prediction from the low-level signals can be used for high-level visual tasks and the approach can adapt the continuous signal behaviour. 
@@ -55,3 +57,71 @@ Some of the important works related to masked image modelling are as follows:
 ## Applications of Masked Image Modelling
 
 Performing image masking helps transformers and autoencoders to learn easily using only required information from the images. Masking can speed up the transformer to perform classification tasks using images. Also, masking images is a process of creating an image piece from a larger image and also we can use it to modify a larger image. It is a process that is underneath many types of image processing like edge detection, motion detection, and noise reduction. Mainly, we can say that this technique can be used in self-supervised learning in computer vision. Masked images are easy to learn because of the low and important information in masked images. Due to high-level unannotated data creating confusion for the model, image masking can be considered as a process of converting high dimensional data to a lower dimension. 
+
+### BEiT
+
+Bidirectional Encoder representation from Image Transformers (BEiT)，提出了 Masked Image Modeling 自监督训练任务的概念，以此来对 ViT 进行训练。如算法概览图（下图）所示，BEiT 预训练中，每一张图片有两种视角：一是图像块 (image patches)，如每一小块图像为 16x16 像素；二是离散的视觉标记 (discrete visual tokens)。在预训练过程中，BEiT 先将原始图片标记化，并且对图像块进行随机掩码，并将掩码后的图片输入到编码器当中，主要的预训练目标就是基于未掩码图像块来恢复掩码图像块。
+
+<div align=center><img src="/assets/MIM-2022-04-07-17-12-25.png" alt="MIM-2022-04-07-17-12-25" style="zoom:50%;" /></div>
+
+首先来看图片的表示，图像块和视觉标记。
+
+图像块和 ViT 原文所描述的并无二致，而对于重建目标，BEiT 并没有使用原始的像素，而是通过一个 “image tokenizer” 进行离散化，遵循的是 dVAE 的思路，在 BEiT 预训练之前，先构建 “tokenizer” 和 “decoder” 进行 dVAE 的训练，并构建视觉词汇表。在 BEiT 中是直接采用 Zero-shot text-to-image generation 文章开源的代码进行训练。
+
+对于预训练的主干网络，则是标准的 ViT，每个图像块会被线性投射为对应的 embedding 向量，同时再加上标准的可学习的绝对位置编码。而与之不同的是，BEiT 采用了 Blockwise Masking 的方式，对大约 40% 的图像块进行了掩码操作，而预训练的目标便是期望能够正确预测掩码图像块的视觉标记，从而获得可以提取图像特征向量的编码器。
+
+在下游的分类和分割任务上，BEiT 均超过了之前的自监督算法和有监督训练模式，达到 SOTA 水准。
+
+BEiT 可以说是将 BERT 形式的预训练方式迁移到视觉领域的开山之作，并提出 MIM 预训练的任务概念，为自监督领域做出了重要的贡献。
+
+### MAE
+
+MAE 相比于 BEiT，简化了整体训练逻辑，利用随机掩码处理输入的图像块，以及直接重建掩码图像块来进行训练。MAE 基于两大主要设计：一是采用了非对称结构的编码-解码器，其中编码器只计算非掩码图像块，同时采用了轻量化的解码器设计；二是遮盖大部分的图像块，如掩码概率为 75%，可以获得更加具有意义的自监督训练任务。
+
+<div align=center><img src="/assets/MAE-2022-03-02-18-56-33.png" alt="MAE-2022-03-02-18-56-33" style="zoom:50%;" /></div>
+
+MAE 逻辑和其他的自编码器类似，通过编码器将原始信号映射到特定空间内的隐变量，再基于隐变量通过解码器重建原始信号，但是与传统的自编码器不同的是，MAE 采用非对称的结构和轻量级解码器。
+
+首先看掩码部分，拆分图像块的方式和 ViT 一致，之后再随机遮盖图像的大部分，使其只留下部分可见内容，所以在训练过程中，模型不容易找到捷径解，例如插值等。
+
+其次来看编码器和解码器，编码器即是标准的 ViT 模型，只不过只对非掩码图像块进行计算，从中提取特征，这种设计可以减少计算量和内存；而解码器则会对所有可见的图像块和掩码图像块进行计算，对于每个图像块会加上位置编码信息，以避免图像块的位置信息丢失。由于数据的输入只有掩码图像块以及编码器和解码器的非对称性，两个模块互相独立设计，所以可以大大减少训练时间。
+
+对于重建目标，MAE 针对每个掩码图像块进行像素值预测，并计算 MSE 损失函数。
+
+在下游任务上，作者提出之前的 linear probing 和端到端微调具有很强的不相关性，即使在过去几年内 linear probing 是最受欢迎的下游评价方式。并且对基于 MAE 预训练的和 MoCo v3 所训练的 ViT-L 进行了实验对比，MAE 在 linear probing 中的结果要差于 MoCo v3，但是从部分微调开始，其结果都要比 MoCo v3 要更好（实验结果如下，0 代表 linear probing ，24 则是全量微调）。
+
+<div align=center><img src="/assets/MAE-2022-03-04-20-37-25.png" alt="MAE-2022-03-04-20-37-25" style="zoom:50%;" /></div>
+
+linear probing 遗漏了一些强大但是非线性的特征，而这正是深度学习的优势。例如在 MAE 中便有更加强大的非线性的特征表示，而 linear probing 并不能很好的展示这一点，所以采用全量微调或者部分微调的 MAE 能取得更好的结果。
+
+MAE 凭借简单的训练思路和 SOTA 的结果，在视觉领域是迅速走红，是一个非常漂亮的研究工作。
+
+### SimMIM
+
+SimMIM 提出了一种简单掩码学习框架，相比之前 SOTA，简化了一些特殊的设计，例如 Blockwise Masking、dVAE 的 tokenizer 或聚类等方法；而简单的设计，例如随机掩码、回归 RGB 像素值和采用线性预测头，也可以取得 SOTA 结果。
+
+<div align=center><img src="/assets/MIM-2022-04-07-18-29-30.png" alt="MIM-2022-04-07-18-29-30" style="zoom:50%;" /></div>
+
+SimMIM 认为掩码部分采用随机掩码，并且适当增大图像块的分辨率即可获得很好的结果，并且文章中提供了对比试验的结果，当图像块分辨率为 32x32 时可以获得最好的效果，并将其设置为 ViT 模型的默认设置。和 NLP 领域算法及 BEiT 类似，掩码 token 为可学习的向量，并且维度和其他图像块线性映射后的维度一致。
+
+在本文中，编码器采用了 ViT 和 Swin Transformer。
+
+对于预测头，文章中也分别对四种架构进行了实验，包括线性层、2 层 MLP、inverse Swin-T 和 inverse Swin-B。实验结果表明使用最简单的线性层，花费最少的训练时间，却可以获得最高的准确率，所以最终便采用了最简单的线性层作为预测头，对掩码图像块进行预测。
+
+预测目标为最简单的 L1 损失函数，即可以获得 SOTA 级别的结果。
+
+### MaskFeat
+
+MaskFeat 算法在整体思路上依然是重建掩码图像块的思路，只不过它的重建目标从原始像素值变成了 HOG 特征描述器。通过作者的实验，在五种不同类型的特征描述中，HOG 可使网络获得最好的结果，且训练更加高效，算法总览图如下：
+
+<div align=center><img src="/assets/MIM-2022-04-07-18-32-55.png" alt="MIM-2022-04-07-18-32-55" style="zoom:50%;" /></div>
+
+MaskFeat 证明了可以直接在无标注的视频数据集上进行训练，并且具有非常优秀的迁移性能。因此，视频理解模型可以不再依靠大数据集的预训练，如 ImageNet-21K，这令视频理解类型的任务受益匪浅。
+
+作者在文中列举了五种不同的目标特征，分别为像素值、HOG 特征、dVAE、预训练神经网络提取的特征和伪标签。基于这五种目标特征，进行了实验，图像目标特征的结果如下：
+
+<div align=center><img src="/assets/MIM-2022-04-07-19-19-45.png" alt="MIM-2022-04-07-19-19-45" style="zoom:50%;" /></div>
+
+可以看到，虽然基于预训练模型的特征可以取得稍好的结果，但是其预训练所额外消耗的时间导致整个训练流程过长，所以基于 HOG 的特征可以说是当前实验结果内的最优选择。
+
+MaskFeat 不需要依赖 ImageNet-21K 这类超大型数据集，提高了预训练的效率；另外，选取不同的目标特征进行实验也为后续的视觉自监督提供了一个新的探索方向。

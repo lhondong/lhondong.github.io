@@ -126,7 +126,7 @@ Convolution decomposition and layer sensitivity
 
 目标是使用 NAS 选出最佳通道：
 $$
-(c_1^*,c_x^*,\cdots,c_K^*)=arg\min_{c_1,c_2,\cdots,c_K} \mathcal L,s.t.MAC\leq F_t
+(c_1^*,c_x^*,\dots,c_K^*)=arg\min_{c_1,c_2,\dots,c_K} \mathcal L,s.t.MAC\leq F_t
 $$
 
 ### 3.3 训练与搜索分离

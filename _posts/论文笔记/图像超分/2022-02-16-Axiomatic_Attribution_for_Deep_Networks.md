@@ -38,9 +38,9 @@ Google
 
 基于人类归因的原理，深度网络归因也需要一个基线 (baseline) 输入来模拟原因缺失的情况。在许多深度网络中，输入空间天然存在着一个 baseline。例如，在目标识别网络中，纯黑图像就是一个基线。下面给出深度网络归因的正式定义：
 
-> $\textbf{Definition 1.}$ Formally, suppose we have a function $F:\mathbb{R}^n\to [0,1]$ that represents a deep network, and an input $x=(x_1,\cdots,x_n)\in \mathbb{R}^n$. An attribution of the prediction at input $x$ relative to a baseline input $x_0$ is a vector $A_F(x,x_0)=(a_1,\cdots,a_n)\in \mathbb{R}^n$ where $a_i$ is the contribution of $x_i$ to the prediction $F(x)$.
+> $\textbf{Definition 1.}$ Formally, suppose we have a function $F:\mathbb{R}^n\to [0,1]$ that represents a deep network, and an input $x=(x_1,\dots,x_n)\in \mathbb{R}^n$. An attribution of the prediction at input $x$ relative to a baseline input $x_0$ is a vector $A_F(x,x_0)=(a_1,\dots,a_n)\in \mathbb{R}^n$ where $a_i$ is the contribution of $x_i$ to the prediction $F(x)$.
 > 
-> 假设存在一个函数 $F:\mathbb{R}^n\to [0,1]$，其表示一个神经网络。该网络的输入是 $x=(x_1,\cdots,x_n)\in \mathbb{R}^n$，那么 $x$ 相较于基线输入 $x_0\in \mathbb{R}^n$ 的归因是一个向量 $A_F(x,x_0)=(a_1,\cdots,a_n)\in \mathbb{R}^n$ ，其中 $a_i$ 是输入 $x_i$ 对预测结果 $F(x)$ 的贡献。
+> 假设存在一个函数 $F:\mathbb{R}^n\to [0,1]$，其表示一个神经网络。该网络的输入是 $x=(x_1,\dots,x_n)\in \mathbb{R}^n$，那么 $x$ 相较于基线输入 $x_0\in \mathbb{R}^n$ 的归因是一个向量 $A_F(x,x_0)=(a_1,\dots,a_n)\in \mathbb{R}^n$ ，其中 $a_i$ 是输入 $x_i$ 对预测结果 $F(x)$ 的贡献。
 
 即对于一个从 $R_n$ 到实数域的映射，在 $R_n$ 找到一个向量 a 作为输入向量 $x$ 的归因（attribution）。注意，在一个 baseline 的情况下，作者说明：
 
@@ -138,7 +138,7 @@ $$
 
 神经网络由有限个不可微点的函数复合而成，是几乎处处可微的实函数。
 
-定义 $\gamma=(\gamma_1,\cdots,\gamma_n): [0,1]\to\mathbb{R}^n$ 为一路径，在这里 $\gamma(\alpha)=(\gamma_1(\alpha),\cdots,\gamma_n(\alpha))=x_0+\alpha(x-x_0)$，于是由链式法则有：
+定义 $\gamma=(\gamma_1,\dots,\gamma_n): [0,1]\to\mathbb{R}^n$ 为一路径，在这里 $\gamma(\alpha)=(\gamma_1(\alpha),\dots,\gamma_n(\alpha))=x_0+\alpha(x-x_0)$，于是由链式法则有：
 
 $$
 \begin{aligned}
@@ -189,7 +189,7 @@ Sensitivity(a) 指的是输入和基线仅在一个变量上不同并导致了�
 
 > Given a path function $\gamma$, path integrated gradients are obtained by integrating the gradients along the path $\gamma(\alpha)$ for $\alpha \in [0,1]$. Formally, path integrated gradients along the $i$th dimension for an input $x$ is defined as follows:
 > 
-> 令 $\gamma=(\gamma_1,\cdots,\gamma_n):[0,1] \to \mathbb{R}^n$ 是 $\mathbb{R}^n$ 上从基线 $x_0$ 到输入 $x$ 的任意路径，其中 $\gamma(0)=x_0$ 并且 $\gamma(1)=x$。那么给定一个路径函数 $\gamma$，则路径方法 (Path Methods) 指的是，沿路径 $\gamma(\alpha)$ 对梯度进行积分，其中 $\alpha \in [0,1]$。更加正式的来说，输入 $x$ 在第 $i$ 维的路径梯度积分 (Path Integrated Gradients) 为：
+> 令 $\gamma=(\gamma_1,\dots,\gamma_n):[0,1] \to \mathbb{R}^n$ 是 $\mathbb{R}^n$ 上从基线 $x_0$ 到输入 $x$ 的任意路径，其中 $\gamma(0)=x_0$ 并且 $\gamma(1)=x$。那么给定一个路径函数 $\gamma$，则路径方法 (Path Methods) 指的是，沿路径 $\gamma(\alpha)$ 对梯度进行积分，其中 $\alpha \in [0,1]$。更加正式的来说，输入 $x$ 在第 $i$ 维的路径梯度积分 (Path Integrated Gradients) 为：
 
 $$
 \text{PathIntegratedGrads}\gamma_i(x)::=\int_0^1\frac{\partial F(\gamma(\alpha))}{\partial\gamma_i(\alpha)}\frac{\partial\gamma_i(\alpha)}{\partial\alpha}d\alpha
@@ -245,7 +245,7 @@ $$
 
 如果输入中的对称变量具有相同的值，并且基线 (baseline) 在对称变量上也具有相同的值，如果输入中对称变量的归因相同，那么就称这样的归因方法是满足对称保持的。
 
-举例来说，存在一个逻辑回归模型 $\text{Sigmoid}(x_1+x_2+\cdots)$ ，其中 $x_1$ 和 $x_2$ 对该模型是对称变量。若输入为 $x_1=x_2=1$，基线 $x_1=x_2=0$，那么一个满足对称保持的归因方法必须为 $x_1$ 和 $x_2$ 提供相同的归因。
+举例来说，存在一个逻辑回归模型 $\text{Sigmoid}(x_1+x_2+\dots)$ ，其中 $x_1$ 和 $x_2$ 对该模型是对称变量。若输入为 $x_1=x_2=1$，基线 $x_1=x_2=0$，那么一个满足对称保持的归因方法必须为 $x_1$ 和 $x_2$ 提供相同的归因。
 
 说明 IntegrateGradients 满足对称性：
 
