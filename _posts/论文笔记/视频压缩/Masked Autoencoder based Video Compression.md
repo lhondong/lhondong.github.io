@@ -1,68 +1,9 @@
 # Masked Autoencoder based Video Compression
 
-[TOC]
-
-## 第一章  绪论​
-
-### 1.1  研究背景​
-
-近年来，随着网络带宽的提高、智能终端和互联网音视频应用数量的迅猛增长，视频流量已经成为网络传输的主要流量，并且仍在移动网络中持续大幅增长。
-
-持续增长的视频流量不仅对网络传输带来了巨大挑战，也带来了海量存储的要求。为了能够传输和存储海量的视频数据，视频压缩编码作为音视频应用的基础技术在快速发展，以 HEVC/H.265 为代表的新一代视频编码技术正在逐渐完善。
-
-传统的编解码器依赖于经典的预测帧变换架构。基于学习的视频压缩算法以其强大的表征能力，不仅实现了更好的压缩效果，同时也比传统编解码压缩算法恢复质量更优。另外，传统的视频压缩工作需要手工针对帧内预测与帧间预测设计很多复杂模块，而端到端的深度学习模型能够自行学习，从而减少帧间冗余，实现更好的压缩效果。
-
-### 1.2  选题意义​
-
-基于掩码自编码器，实现一个高效的端到端视频压缩框架。
-
-## 第二章  研究现状​
-
-### 2.1 
-
-#### 2.1.1  
-
-#### 2.1.2
-
-### 2.2  
-
-#### 2.2.1 
-
-#### 2.2.2  
-
-### 2.3  总结​
-
-## 第三章  研究内容​
-
-### 3.1 
-
-### 3.2  
-
-#### 3.2.1  
-
-#### 3.2.2 
-
-#### 3.2.3
-
-### 3.3 
-
-#### 3.3.1
-
-#### 3.3.2  
-
-#### 3.3.3 
-
-### 3.5  已有成果​
-
-#### 3.5.1  实验方法​
-
-#### 3.5.2  实验结果​
-
-### 3.6  预计成果​
-
-## 第四章  研究进度安排​
-
-## 参考文献​
+- [ ] Decoder 设计
+- [ ] pre-train model
+- [ ] 端到端 fine-tune
+- [ ] PSNR，SSIM，LPIPS 横向对比
 
 ## 摘要
 
@@ -76,6 +17,22 @@ Transformer 证明在图像领域也是非常好的性能，包括 Video Restora
 
 将 Masked Autoencoder 用于视频压缩技术，它的压缩效果比之前的深度学习视频压缩框架都要好。在达到相同恢复质量的情况下，我们的工作相比于 HEVC 压缩效率好多少，相比于之前的工作好多少。
 
+## Introduction
+
+近年来，随着网络带宽的提高、智能终端和互联网音视频应用数量的迅猛增长，视频流量已经成为网络传输的主要流量，并且仍在移动网络中持续大幅增长。
+
+持续增长的视频流量不仅对网络传输带来了巨大挑战，也带来了海量存储的要求。为了能够传输和存储海量的视频数据，视频压缩编码作为音视频应用的基础技术在快速发展，以 HEVC/H.265 为代表的新一代视频编码技术正在逐渐完善。
+
+传统的编解码器依赖于经典的预测帧变换架构。基于学习的视频压缩算法以其强大的表征能力，不仅实现了更好的压缩效果，同时也比传统编解码压缩算法恢复质量更优。另外，传统的视频压缩工作需要手工针对帧内预测与帧间预测设计很多复杂模块，而端到端的深度学习模型能够自行学习，从而减少帧间冗余，实现更好的压缩效果。
+
+Traditional video coding standards such as MPEG, AVC/H.264 [49], HEVC/H.265 [43], and VP9 [38] have achieved impressive performance on video compression tasks. However, as their primary applications are human perception driven, those hand-crafted codecs are likely suboptimal for machine-related tasks such as deep learning based video analytic.
+
+rate-distortion trade-off
+
+During recent years, a growing trend of employing deep neural networks (DNNs) for image compression tasks has been witnessed. Prior works [46, 7, 36] have provided theo- retical basis for application of deep autoencoders (AEs) on image codecs that attempt to optimize the rate-distortion trade-off, and they have showed the feasibility of latent representation as a format of compressed signal
+
+深度学习图像压缩进展
+
 ### Contributions
 
 1. 第一个将 ViT 用于端到端视频压缩。
@@ -85,7 +42,13 @@ Transformer 证明在图像领域也是非常好的性能，包括 Video Restora
 
 A desired compression rate is controlled by the size of latent dimension in the image compression stage as well as the number of quantization levels used in residual encoding
 
-设计不同的压缩率
+设计不同的压缩率，不同掩码比例来控制
+
+## Related Work
+
+1. Deep Learning based Video Compression
+2. Vision Transformer
+3. Mask Autoencoder
 
 #### 视频压缩主要方法
 
@@ -167,29 +130,13 @@ Gang He, Chang Wu, Lei Li, et al. . A Video Compression Framework Using an Overf
 
 此外，该方案在解码器的轻量化及解码速度上取得了重大突破，在与前三名 MS-SSIM 相近的情况下，该方案的解码器大小在所有队伍中最小，且该方案的解码速度均快于前三名。
 
-## Introduction
-
-Traditional video coding standards such as MPEG, AVC/H.264 [49], HEVC/H.265 [43], and VP9 [38] have achieved impressive performance on video compression tasks. However, as their primary applications are human perception driven, those hand-crafted codecs are likely suboptimal for machine-related tasks such as deep learning based video analytic.
-
-rate-distortion trade-off
-
-During recent years, a growing trend of employing deep neural networks (DNNs) for image compression tasks has been witnessed. Prior works [46, 7, 36] have provided theo- retical basis for application of deep autoencoders (AEs) on image codecs that attempt to optimize the rate-distortion trade-off, and they have showed the feasibility of latent representation as a format of compressed signal
-
-深度学习图像压缩进展
-
-## Related Work
-
-1. Deep Learning based Video Compression
-2. Vision Transformer
-3. Mask Autoencoder
-
 ## Method
 
 ### Encoder
 
 借鉴了 MAE 中的编码器，使用 Swin Transformer。
 
-## Decoder
+### Decoder
 
 为了更好的恢复效果，SwinIR 超分，Video Restortion Transformer 视频恢复。
 
@@ -206,6 +153,17 @@ $$
 ### Datasets
 
 Kinetics dataset [10] and the UGC dataset
+
+- HEVC 数据集，16 个视频， Class B, C, D, E 不同的分辨率，从 416 × 240 到 1920 × 1080
+  - Class A:从超清视频序列"Traffic" (4096x2048p 30 fps), "PeopleOnStreet" (3840x2160p30 fps).中截取的2560x1600的序列
+  - Class B:1920x1080p 24 fps: "ParkScene","Kimono"，1920x1080p 50-60 fps: "Cactus", "BasketballDrive","BQTerrace
+  - Class C:832x480p 30-60 fps (WVGA):"BasketballDrill", "BQMall", "PartyScene","RaceHorses"
+  - Class D:416x240p 30-60 fps (WQVGA):"BasketballPass", "BQSquare", "BlowingBubbles","RaceHorses"
+  - Class E:1280x720p 60fps video conferencing scenes:"Vidyo1", "Vidyo3" and "Vidyo4"
+- UVG 数据集包括七个高帧率的，1920 × 1080 分辨率的视频，相邻帧之间的差异很小 
+- MCL-JCV 数据集包括 30 个 1080p 视频序列，用于视频质量评估
+- VTL 数据集使用前 300 帧的高分辨率视频序列，分辨率为 352 × 288
+- JCT-VC
 
 ### Setting
 

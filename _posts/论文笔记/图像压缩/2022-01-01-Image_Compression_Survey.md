@@ -111,7 +111,7 @@ Toderici 等人 [21] 首次使用了卷积 LSTM 实现了可变比特率的端�
 该方法利用 RNN 的成功是有目共睹的，使更多人的目光转向了图像压缩。在此之后 Johnston 等人 [23] 为了提高框架的压缩性能，修改了递归结构从而改善了空间扩散，使得网络能够更加高效地捕获图像信息，引入了一种空间自适应比特分配算法，它可以根据图像的复杂性动态的调整每个图像的比特率；采用了基于 SSIM 加权像素损失训练 [24-25]，可以更好地感知图像。
 
 - [23] Johnston N，Vincent D，Minnen D，et al.Improved lossy image compression with priming and spatially adaptive bit rates for recurrent networks[C]//Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition，2018:4385-4393.
-- [24] Wang Z，Bovik A C，Sheikh H R，et al.Image quality assessment: fromerrorvisibilitytostructuralsimilarity[J]. IEEE Transactions on Image Processing，2004，13(4): 600-612.
+- [24] Wang Z，Bovik A C，Sheikh H R，et al.Image quality assessment: from error visibility to structural similarity[J]. IEEE Transactions on Image Processing，2004，13(4): 600-612.
 - [25] Zhao H，Gallo O，Frosio I，et al.Loss functions for image restoration with neural networks[J].IEEE Transactions on Computational Imaging，2016，3(1):47-57.
 
 基于深度学习的图像压缩框架多采用端到端的方式，并且大多数图像压缩系统对空间块分别进行解码，而不考虑与周围块的空间依赖性，因此 Ororbia 等人 [26] 没有采用端到端的压缩框架，而是关注了空间块的相关性，引入了一种有效利用因果信息和非因果信息来改进低比特率重构结构，更专注于系统的解码器，在算法的设计上采用了非线性估计作为编码器，将空间上像素的关联和非关联的相关性引入了 RNN 中，利用 RNN 的局部记忆捕捉短期的因果环境，通过 RNN 的记忆对图像斑块进行逐步改善重建，将图像压缩中重建图像的行为视为一个多步重建问题，建立一个模型使其在有限数量的通道上改进其对某些目标样本的重建效果，以逐步改善图像重建质量，达到在给定编码位数的情况下提高编码精度，并且根据不同的编码器和量化方案，寻求最优的非线性解码器，从而避开如近似、量化等问题，使其可以更好地利用开发编码器和量化操作。值得一提的是，该方法可以用于任意的传统编码器中。

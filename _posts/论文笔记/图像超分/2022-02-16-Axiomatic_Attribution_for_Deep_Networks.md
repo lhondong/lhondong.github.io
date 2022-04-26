@@ -183,7 +183,7 @@ Sensitivity(a) 指的是输入和基线仅在一个变量上不同并导致了�
 
 积分梯度法是沿着基线 (baseline input) 和输入 (input) 间的直线对梯度进行累计。但是，在这两点间存在着许多的路径，每种路径则对应着不同的归因方法。例如，在输入为 2 维的例子中，下图中的三条路径分别对应不同的归因方法。
 
-<div align=center><img src="/assets/Axiomatic_Attribution_for_Deep_Networks-2022-02-16-17-11-54.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-02-16-17-11-54" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/Axiomatic_Attribution-2022-02-16-17-11-54.png" alt="Axiomatic_Attribution-2022-02-16-17-11-54" style="zoom:50%;" /></div>
 
 指出一般的 Path Method，及其 PathIntegratedGrads 定义：
 
@@ -346,8 +346,8 @@ if __name__ == '__main__':
 
 在 m=10 时，分别是原图，gradients 和 integrated gradients 方法：
 
-<div align=center><img src="/assets/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-46.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-46" style="zoom:100%;" /></div>
+<div align=center><img src="/assets/Axiomatic_Attribution-2022-01-11-22-28-46.png" alt="Axiomatic_Attribution-2022-01-11-22-28-46" style="zoom:100%;" /></div>
 
-<div align=center><img src="/assets/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-59.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-28-59" style="zoom:100%;" /></div>
+<div align=center><img src="/assets/Axiomatic_Attribution-2022-01-11-22-28-59.png" alt="Axiomatic_Attribution-2022-01-11-22-28-59" style="zoom:100%;" /></div>
 
-<div align=center><img src="/assets/Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-29-11.png" alt="Axiomatic_Attribution_for_Deep_Networks-2022-01-11-22-29-11" style="zoom:100%;" /></div>
+<div align=center><img src="/assets/Axiomatic_Attribution-2022-01-11-22-29-11.png" alt="Axiomatic_Attribution-2022-01-11-22-29-11" style="zoom:100%;" /></div>
