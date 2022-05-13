@@ -33,7 +33,7 @@ SR 问题，对于算法的评估主要是分为两类，一类是是像素维�
 
 作者证明了 perception 和 distortion 之间存在下面这样的一条曲线，并且左下角的区域是任何算法都无法达到的。一些一味注重优化 distortion 的算法可能既不有效又损害视觉质量（在曲线的右上方区域），说明了 GAN 方法的有效性（去逼近这个 bound）。对于不同的领域应该有不同的侧重点，比如对于医学领域可能会更注重 distortion accuracy，即与原图像的接近程度。这个图像也指导给出了一个新的衡量算法的方法，将算法的表现绘制到该坐标轴上（同时考虑 perceptual quality 和 distortion）。 
 
-<div align=center><img src="/assets/The Perception-Distortion Tradeoff-2022-01-11-23-34-01.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-01" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/Perception-Distortion_Tradeoff-2022-01-11-23-34-01.png" alt="Perception-Distortion_Tradeoff-2022-01-11-23-34-01" style="zoom:50%;" /></div>
 
 ### 1.1 Motivation
 
@@ -55,7 +55,7 @@ SR 问题，对于算法的评估主要是分为两类，一类是是像素维�
 
 ## 三、问题定义
 
-<div align=center><img src="/assets/The Perception-Distortion Tradeoff-2022-01-11-23-34-25.png" alt="The Perception-Distortion Tradeoff-2022-01-11-23-34-25" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/Perception-Distortion_Tradeoff-2022-01-11-23-34-25.png" alt="Perception-Distortion_Tradeoff-2022-01-11-23-34-25" style="zoom:50%;" /></div>
 
 实际上自然图像可以看做是自然图像 $p(X)$ 的自然分布的一个实现，可以把失真后的图像 $y$ 看成是给定原图像 $x$ 在条件分布 $p(Y\mid X)$ 下产生的结果，失真后还原的图像 $x’$ 可以看成 $y$ 在条件分布 $p(X\mid Y)$ 产生的结果。失真的公式可以表示如下： 
 
