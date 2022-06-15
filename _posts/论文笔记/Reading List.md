@@ -32,8 +32,8 @@
 - [ ] [CVPR 2021] FVC: A New Framework towards Deep Video Compression in Feature Space
 - [ ] [ICLR 2021] Hierarchical Autoregressive Modeling for Neural Video Compression
 - [ ] [ICLR 2022] Transformer-based Transform Coding
-- [ ] RLVC: Learning for Video Compression with Recurrent Auto-Encoder and Recurrent Probability Model
-- [ ] PLVC: Perceptual Learned Video Compression with Recurrent Conditional GAN
+- [ ] [JSTSP 2021] RLVC: Learning for Video Compression with Recurrent Auto-Encoder and Recurrent Probability Model
+- [ ] [IJCAI 2022] PLVC: Perceptual Learned Video Compression with Recurrent Conditional GAN
 - [ ] Temporal Context Mining for Learned Video Compression
 
 ## Image Compression
@@ -44,7 +44,6 @@
 - [ ] [ICCV 2019] Generative Adversarial Networks for Extreme Learned Image Compression
 - [ ] [CVPR 2020] Learning Better Lossless Compression Using Lossy Compression
 - [ ] [NIPS 2020] High-Fidelity Generative Image Compression
-- [ ] Towards End-to-End Image Compression and Analysis with Transformers
 - [ ] [AAAI 2022] Towards End-to-End Image Compression and Analysis with Transformers
 
 ## Image Generation

@@ -1,5 +1,35 @@
 
-# PyTorch 模块
+# PyTorch 基础
+
+```python
+train_data_loader = Dataloader()
+model = Model() # nn.Module
+criterion = torch.nn.MSEloss()
+optimizer = torch.optim.Adam(model.parameter(), lr=1e-3)
+
+for epoch in range(num_epoches):
+        model.train()
+        for batch in train_data_loader:
+                x, y = batch
+                y_pred = model(x)
+                loss = criterion(y, y_pred)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+        model.eval()
+        eval_data_loader = Dataloader()
+        with torch.no_grad():
+                Y = []
+                Y_pred = []
+                for batch in eval_data_loader:
+                        x, y = batch
+                        Y.append(y)
+                        y_pred = model(x)
+                        Y_pred.append(y_pred)
+                score = evaluate(Y, Y_pred)
+                # score 最大就停止或者 early stopping
+```
 
 ## 1. 数据模块
 
@@ -38,7 +68,7 @@
 
 张量是一个**多维数组**，它是标量、向量、矩阵的高维拓展。
 
-### 1.1 Tensor 与 Variable
+- Tensor 与 Variable
 
 Variable 是 torch.autograd 中的数据类型，主要用于封装 Tensor，进行**自动求导**。
 
@@ -54,11 +84,11 @@ PyTorch 0.4.0 版开始，Variable 并入 Tensor。（多了三个属性，共�
 - shape：张量的形状，如 (64, 3, 224, 224)
 - device：张量所在设备，GPU/CPU，是加速的关键
 
-### 1.2 Tensor 创建
+## Tensor 创建
 
-#### 1. 直接创建
+### 1. 直接创建
 
-##### torch.tensor()
+#### torch.tensor()
 
 功能：从 data 创建 Tensor
 
@@ -82,9 +112,9 @@ torch.tensor(data,
 
 注意事项：从 torch.from_numpy 创建的 tensor 于原 ndarray 共享内存，当修改其中一个的数据，另外一个也将会被改动。
 
-#### 2. 依据数值创建
+### 2. 依据数值创建
 
-##### torch.zeros()
+#### torch.zeros()
 
 - size：张量的形状，如 (3, 3)、(3, 224,224)
 - out：输出的张量
@@ -107,17 +137,14 @@ t = torch.zeros((3, 3), out=out_t)
 # 将生成的 out 赋值给 out_t
 ```
 
-##### torch.zeros_like(input)
+#### torch.zeros_like(input)
 
 功能：依 input 形状创建全 0 张量
 
-torch.ones()
-
-torch.ones_like()
-
-torch.full()
-
-torch.full_like()
+- torch.ones()
+- torch.ones_like()
+- torch.full()
+- torch.full_like()
 
 ```python
 torch.full(size,
@@ -126,7 +153,7 @@ torch.full(size,
 torch.full((3,3), 10)
 ```
 
-##### torch.arange()
+#### torch.arange()
 
 功能：创建等差的 1 维张量
 
@@ -142,7 +169,7 @@ Out:
 tensor([2,4,6,8]) #没有 10
 ```
 
-##### torch.linspace() 
+#### torch.linspace() 
 
 功能：创建均分的 1 维张量 
 
@@ -160,7 +187,7 @@ torch.linspace(2, 10, 6)
 Out: tensor([2.0000, 3.6000 ,5.2000, 6.8000, 8.4000, 10.0000])
 ```
 
-##### torch.logspace()
+#### torch.logspace()
 
 功能：创建对数均分的 1 维张量 
 
@@ -171,7 +198,7 @@ Out: tensor([2.0000, 3.6000 ,5.2000, 6.8000, 8.4000, 10.0000])
 - steps：数列长度
 - base：对数函数的底，默认为 10
 
-##### torch.eye() 
+#### torch.eye() 
 
 功能：创建单位对角矩阵 (2 维张量） 
 
@@ -180,9 +207,9 @@ Out: tensor([2.0000, 3.6000 ,5.2000, 6.8000, 8.4000, 10.0000])
 - n：矩阵行数
 - m：矩阵列数
 
-#### 3. 依概率分布创建张量
+### 3. 依概率分布创建张量
 
-##### torch.normal() 
+#### torch.normal() 
 
 功能：生成正态分布（高斯分布）
 
@@ -219,21 +246,20 @@ Out:
 tensor([1.6614, 2.2669, 3.0617, 4.6213])
 ```
 
-##### torch.randn()
+#### torch.randn()
 
 功能：生成**标准正态分布** 
 
 - size：张量的形状
 
-##### torch.randn_like()
+- torch.randn_like()
 
-##### torch.rand()
+#### torch.rand()
 
-##### torch.rand_like()
+- 功能：在区间 [0, 1) 上，生成**均匀分布**
+- torch.rand_like()
 
-功能：在区间 [0, 1) 上，生成**均匀分布** 
-
-##### torch.randint()
+#### torch.randint()
 
 功能：区间 [low, high) 生成整数均匀分布 
 
@@ -241,25 +267,23 @@ tensor([1.6614, 2.2669, 3.0617, 4.6213])
 - high
 - size：张量的形状
 
-##### torch.randint_like()
+#### torch.randint_like()
 
-##### torch.randperm()
+#### torch.randperm()
 
-功能：生成生成从 0 到 n-1 的随机排列
-
+- 功能：生成生成从 0 到 n-1 的随机排列
 - n：张量的长度
 
-##### torch.bernoulli()
+#### torch.bernoulli()
 
-功能：以 input 为概率，生成伯努力分布 (0-1 分布，两点分布）
-
+- 功能：以 input 为概率，生成伯努力分布 (0-1 分布，两点分布）
 - input：概率值
 
-### 1.3 Tensor 操作
+## Tensor 操作
 
-#### 1. 张量拼接与切分
+### 1. 张量拼接与切分
 
-#####  torch.cat()
+####  torch.cat()
 
 功能：将张量按维度 dim 进行拼接 
 
@@ -275,13 +299,14 @@ Out:
 t_0:
 tensor([[1., 1., 1.],
         [1., 1., 1.],
+        [1., 1., 1.],
         [1., 1., 1.]]) shape:torch.Size([4, 3])
 t_1:
 tensor([[1., 1., 1., 1., 1., 1., 1., 1., 1.],
         [1., 1., 1., 1., 1., 1., 1., 1., 1.]]) shape:torch.Size([2, 9])
 ```
 
-##### torch.stack()
+#### torch.stack()
 
 功能：在新创建的维度 dim 上进行拼接 
 
@@ -290,7 +315,7 @@ tensor([[1., 1., 1., 1., 1., 1., 1., 1., 1.],
 
 ```python
 a = torch.ones((2,3))
-a_stack = torch.stack([a,a],dim = 2)
+a_stack = torch.stack([a,a], dim = 2)
 
 Out:
 tensor([[[1., 1.],
@@ -311,11 +336,10 @@ tensor([[[1., 1., 1.],
          [1., 1., 1.]]]) #在第 0 维新建，(2,2,3)
 ```
 
-##### torch.chunk()
+#### torch.chunk()
 
-功能：将张量按维度 dim 进行平均切分
-
-返回值：张量列表
+- 功能：将张量按维度 dim 进行平均切分
+- 返回值：张量列表
 
 注意事项：若不能整除，最后一份张量小于其他张量
 
@@ -339,11 +363,10 @@ tensor([[1., 1.],
         [1., 1.]]) #切分为两个张量，最后一个比较小
 ```
 
-##### torch.split()
+#### torch.split()
 
-功能：将张量按维度 dim 进行切分
-
-返回值：张量列表
+- 功能：将张量按维度 dim 进行切分
+- 返回值：张量列表
 
 - tensor: 要切分的张量
 - split_size_or_sections: 为 int 时，表示每一份的长度；为 list 时，按 list 元素切分
@@ -361,13 +384,13 @@ tensor([[1.],
 tensor([[1., 1.],
         [1., 1.]]), shape is torch.Size([2, 2])
 ```
-#### 2. 张量索引
 
-##### torch.index_select()
+### 2. 张量索引
 
-功能：在维度 dim 上，按 index 索引数据
+#### torch.index_select()
 
-返回值：依 index 索引数据拼接的张量
+- 功能：在维度 dim 上，按 index 索引数据
+- 返回值：依 index 索引数据拼接的张量
 
 - input: 要索引的张量
 - dim: 要索引的维度
@@ -390,18 +413,17 @@ tensor([[4, 5, 0],
 
 注意：**index 必须是 dtype=torch.long，否则 torch.float 也会报错。**
 
-##### torch.masked_select()
+#### torch.masked_select()
 
-功能：按 mask 中的 True 进行索引
-
-返回值：一维张量
+- 功能：按 mask 中的 True 进行索引
+- 返回值：一维张量
 
 - input: 要索引的张量
 - mask: 与 input 同形状的布尔类型张量
 
 ```python
 a = torch.randint(0, 9, (3,3))
-mask = a.ge(5) # ge means greater or equal/ gt means greater than/le,lt
+mask = a.ge(5) # a >= 5, ge means greater or equal/ gt means greater than/le,lt
 a_select = torch.masked_select(a, mask)
 
 Out:
@@ -411,9 +433,9 @@ tensor([[2, 1, 5],
 tensor([5, 6, 8, 8])
 ```
 
-#### 3. 张量变换
+### 3. 张量变换
 
-##### torch.reshape()
+#### torch.reshape()
 
 功能：变换张量形状
 
@@ -422,7 +444,7 @@ tensor([5, 6, 8, 8])
 - input: 要变换的张量
 - shape: 新张量的形状（-1 表示该维度不定义，根据其他维度计算而来）
 
-##### torch.transpose()
+#### torch.transpose()
 
 功能：交换张量的两个维度 
 
@@ -434,11 +456,11 @@ tensor([5, 6, 8, 8])
 t_transpose = torch.transpose(t, dim0=1, dim1=2)    # c*h*w -> h*w*c
 ```
 
-##### torch.t() 
+#### torch.t() 
 
 功能：2 维张量转置，对矩阵而言，等价于 torch.transpose(input, 0, 1)
 
-##### torch.squeeze()
+#### torch.squeeze()
 
 功能：压缩长度为 1 的维度（轴）
 
@@ -457,15 +479,15 @@ t_0.shape: torch.Size([2, 3, 1])
 t_1.shape: torch.Size([1, 2, 3, 1]) # 当且仅当该轴长度为 1 时，可以被移除
 ```
 
-##### torch.unsqueeze() 
+#### torch.unsqueeze() 
 
 功能：依据 dim 扩展维度
 
 - dim: 扩展的维度
 
-#### 4. 张量数学运算
+### 4. 张量数学运算
 
-##### torch.add()
+#### torch.add()
 
 功能：逐元素计算 input+alpha×other
 
@@ -476,11 +498,13 @@ t_1.shape: torch.Size([1, 2, 3, 1]) # 当且仅当该轴长度为 1 时，可以
 ```python
 torch.add(input,
           alpha=1,
-		  other, 
+	        other, 
           out=None)
+
+t_add = torch.add(t_0, 10 ,t_1)
 ```
 
-##### torch.addcmul() 
+#### torch.addcmul() 
 
 $$
 out = input+value \times tensor1 \times tensor2
@@ -494,7 +518,7 @@ $$
 			   out=None)
 ```
 
-##### torch.addcdiv()
+#### torch.addcdiv()
 
 $$
 out = input+value \times \frac{tensor1}{tensor2}
@@ -504,13 +528,13 @@ torch.sub()
 
 torch.div()
 
-##### torch.dot()
+#### torch.dot()
 
 向量点乘，得到的结果是 scale 标量。对应元素相乘并相加
 
 `torch.dot(a,b)` 相当于 `torch.sum(torch.mul(a,b))`
 
-##### torch.mul()
+#### torch.mul()
 
 用法与 * 乘法相同，也是 element-wise 的乘法，也是支持 broadcast 的。
 
@@ -526,7 +550,7 @@ b = torch.randn(3, 4)
 print (torch.mul(a,b).shape) # 输出 torch.size(2,3,4)
 ```
 
-##### torch.mm
+#### torch.mm
 
 - 数学里的矩阵乘法，要求两个 Tensor 的维度满足矩阵乘法的要求。
 
@@ -534,13 +558,13 @@ print (torch.mul(a,b).shape) # 输出 torch.size(2,3,4)
 
 其中 mat1(n×m), mat2 (m×d), Out (n×d)。一般只用来计算两个二维矩阵的矩阵乘法，而且不支持 broadcast 操作。
 
-##### torch.bmm 三维带 Batch 矩阵乘法 
+#### torch.bmm 三维带 Batch 矩阵乘法 
 
 `torch.bmm(bmat1, bmat2, out=None)`
 
 其中 bmat1(B×n×m), bmat2 (B×m×d), Out (B×n×d)。两个输入必须是三维矩阵且第一维相同（表示 Batch 维度），不支持 broadcast 操作。
 
-##### torch.matmul "混合"矩阵乘法
+#### torch.matmul "混合"矩阵乘法
 
 torch.mm 的 broadcast 版本，具体操作取决于两个 tensor 的 shape，按两个矩阵维度的不同可分为以下五种
 
@@ -657,9 +681,9 @@ for iteration in range(100):
 
 grad_fn: 记录创建该张量时所用的方法 （函数）
 
-- y.grad_fn = <MulBackward0> 
-- a.grad_fn = <AddBackward0> 
-- b.grad_fn = <AddBackward0>
+- `y.grad_fn = <MulBackward0>`
+- `a.grad_fn = <AddBackward0>`
+- `b.grad_fn = <AddBackward0>`
 
 #### 动态图
 
@@ -668,7 +692,7 @@ grad_fn: 记录创建该张量时所用的方法 （函数）
 
 ## 4. autograd 自动求导
 
-##### torch.autograd.backward 
+#### torch.autograd.backward 
 
 功能：自动求取梯度
 
@@ -678,17 +702,27 @@ grad_fn: 记录创建该张量时所用的方法 （函数）
 - grad_tensors: 多梯度权重
 
 ```python
-loss = torch.cat([y0,y1], dim=0)
-grad_tensor = torch.tensor([1., 2.])
+w = torch.tensor([1.], requires_grad=True)
+x = torch.tensor([2.], requires_grad=True)
 
-loss.backward(gradient=gradient_tensor) #权重设置为 y0+2*y1
+a = torch.add(w, x)     # retain_grad()
+b = torch.add(w, 1)
+
+y0 = torch.mul(a, b)    # y0 = (x+w) * (w+1)
+y1 = torch.add(a, b)    # y1 = (x+w) + (w+1)    dy1/dw = 2
+
+loss = torch.cat([y0,y1], dim=0)
+gradient_tensor = torch.tensor([1., 2.])
+
+loss.backward(gradient=gradient_tensor) # 权重设置为 y0+2*y1
+print(w.grad)
 ```
 
-张量的 backward() 直接调用 torch.autograd.backward()。
+张量的 `backward()` 直接调用 `torch.autograd.backward()`
 
 使用 retain_graph=True 可以多次反向传播，不会被内存释放。
 
-##### torch.autograd.grad 
+#### torch.autograd.grad 
 
 功能：高阶求导
 
@@ -702,7 +736,7 @@ loss.backward(gradient=gradient_tensor) #权重设置为 y0+2*y1
 x = torch.tensor([3.], requires_grad=True)
 y = torch.pow(x, 2)
 
-grad_1 = torch.autograd.grad(y, x, create_graph=True) #创建导数的计算图，对导数再次求导
+grad_1 = torch.autograd.grad(y, x, create_graph=True) # 创建导数的计算图，对导数再次求导
 print(grad_1)
 
 grad_2 = torch.autograd.grad(grad_1[0], x)
@@ -713,7 +747,7 @@ Out:
 (tensor([2.]),)
 ```
 
-##### autograd 特性
+#### autograd 特性
 
 1. 梯度不自动清零
 2. 依赖于叶子结点的结点，requires_grad 默认为 True 

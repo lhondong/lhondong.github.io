@@ -7,6 +7,20 @@
 
 ## 摘要
 
+During recent years, with the continuous growth of internet video applications, video data has become the most important internet traffic, and it will increase even further. The increasing video data not only brings a huge challenge to network transmission, but also puts new requirements for massive storage. Therefore, it is very critical to build an efficient video compression system to reduce network bandwidth and storage resources. 
+
+The traditional video coding standards, such as AVC/HEVC, have made great progress through decades of development, but the complexity of its hand-craft modules is increasing, and the potential for performance improvement is getting smaller and smaller, so it is difficult to further improve performance.
+
+With the powerful representation ability of the deep neural networks, learning based video compression has not only higher compression efficiency, but also better restoration quality than traditional video compression. For example, learning based video compression can replace the motion estimation and motion compensation with optical flow network, or replace the transformation, quantization with autoencoders.
+
+Meanwhile, End-to-end optimized video compression no need to design complex hand-craft modules, and the Encoder and decoder can be jointly optimized, so it is easy to get global optimal performance.
+
+
+Our contributions are summarized as follows:
+
+- We first introduce Transformer into video compression.
+- We first introduce masked image model into video compression.
+
 掩码 masked image model 已经取得了 outperform 性能。
 
 Transformer 证明在图像领域也是非常好的性能，包括 Video Restoration。
@@ -46,9 +60,15 @@ A desired compression rate is controlled by the size of latent dimension in the 
 
 ## Related Work
 
-1. Deep Learning based Video Compression
-2. Vision Transformer
-3. Mask Autoencoder
+### 1. Neural image compression
+
+Recently there are many works for deep image compression. For example, the compressive autoencoder  could get comparable results with JPEG 2000. Subsequently, many works boost the performance by more advanced entropy models and network structures. For
+
+### 2. Deep Learning based Video Compression
+
+### 3. Vision Transformer
+
+### 4. Mask Autoencoder
 
 #### 视频压缩主要方法
 

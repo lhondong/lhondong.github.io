@@ -24,18 +24,18 @@ ViT(Vision Transformer) 直接将直接应用在图像，经过微调：将图�
 
 Inductive biases 归纳偏置，可以理解为先验知识。CNN 的 Inductive biases 是 locality 和 平移等变性 translation equaivariance（平移不变性 spatial invariance）。
 
-- Locality: CNN用滑动窗口在图片上做卷积。假设是图片相邻的区域有相似的特征。i.e., 桌椅在一起的概率大，距离近的物品 相关性越强。
+- Locality: CNN 用滑动窗口在图片上做卷积。假设是图片相邻的区域有相似的特征。i.e., 桌椅在一起的概率大，距离近的物品 相关性越强。
 - Translation Equaivariance：$f(g(x)) = g(f(x))$  ，卷积 $f$ 和平移 $g$ 函数的顺序不影响结果。
 
 CNN 的卷积核像一个 template 模板，同样的物体无论移动到哪里，遇到了相同的卷积核，它的输出一致。
 
 CNN 有 locality 和 translation equivariance 归纳偏置，即 CNN 有很多先验信息，所以只需要较少的数据就可以学好一个模型。
 
-Transformer 没有这些先验信息，只能从图片数据里，自己学习对**视觉世界**的感知。因此Transformers 在小数据上的预测正确率比 CNN 低，当采用混合结构时（即将 CNN 的输出特征作为输入序列时，尽在小数据上实现性能提升），这与我们预期有差，期望 CNN 的引入能够提升所有尺寸训练样本下的性能。就是凭借一些规律得出的偏好：如 CNN 天然的对图像处理的较好，天然的具有平移不变性等。
+Transformer 没有这些先验信息，只能从图片数据里，自己学习对**视觉世界**的感知。因此 Transformers 在小数据上的预测正确率比 CNN 低，当采用混合结构时（即将 CNN 的输出特征作为输入序列时，尽在小数据上实现性能提升），这与我们预期有差，期望 CNN 的引入能够提升所有尺寸训练样本下的性能。就是凭借一些规律得出的偏好：如 CNN 天然的对图像处理的较好，天然的具有平移不变性等。
 
 ### 怎么验证 Transformer 无 inductive bias 的假设？
 
-在 1400万(ImageNet-21K) - 3000 万(JFT-300)得到图片数据集上预训练 trumps inductive bias, ViT + 足够训练数据，CV SOTA。
+在 1400 万 (ImageNet-21K) - 3000 万 (JFT-300) 得到图片数据集上预训练 trumps inductive bias, ViT + 足够训练数据，CV SOTA。
 
 ###  如何理解 CNN 整体结构不变？
 
@@ -83,7 +83,7 @@ $$
 这个全连接层就是上式中的 $E$，它的输入维度大小是 $(P^2 \cdot C)$，输出维度大小是 $D$。
 
 ```python
-# 将3072变成dim，假设是1024
+# 将 3072 变成 dim，假设是 1024
 self.patch_to_embedding = nn.Linear(patch_dim, dim)
 x = self.patch_to_embedding(x)
 ```
@@ -104,11 +104,11 @@ x = self.patch_to_embedding(x)
 # dim=1024
 self.cls_token = nn.Parameter(torch.randn(1, 1, dim))
 
-# forward前向代码
-# 变成(b,64,1024)
+# forward 前向代码
+# 变成 (b,64,1024)
 cls_tokens = repeat(self.cls_token, '() n d -> b n d', b=b)
-# 跟前面的分块进行concat
-# 额外追加token，变成b,65,1024
+# 跟前面的分块进行 concat
+# 额外追加 token，变成 b,65,1024
 x = torch.cat((cls_tokens, x), dim=1)
 ```
 
@@ -127,7 +127,7 @@ $$
 发现**位置越接近，往往具有更相似的位置编码**。此外，出现了行列结构：**同一行/列中的 patch 具有相似的位置编码。**
 
 ```python
-# num_patches=64，dim=1024,+1是因为多了一个cls开启解码标志
+# num_patches=64，dim=1024,+1 是因为多了一个 cls 开启解码标志
 self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))
 ```
 
@@ -169,13 +169,25 @@ ViT 可以处理任意 $N$ 的输入，但是 Positional Encoding 是按照预�
 
 ### 整个流程
 
-- 一个图片 256x256，分成了 64 个 32x32 的 patch；
-- 对这么多的 patch 做 embedding，成 64 个 1024 向量；
-- 再拼接一个 cls_tokens，变成 65 个 1024 向量；
-- 再加上 pos_embedding，还是 65 个 1024 向量；
-- 这些向量输入到 Transformer 中进行自注意力的特征提取；
-- 输出的是 64 个 1024 向量，然后对这个 50 个求均值，变成一个 1024 向量；
-- 然后线性层把 1024 维变成 mlp_head 维从而完成分类任务的 Transformer 模型。
+- 输入图像 224×224×3，每个 patch 大小为 16×16，则打成 patches 后，维度变为 $(\frac{224}{16}\times\frac{224}{16})\times(16\times16\times 3)=196\times 768$，即 196 个 patches，每个维度是 768；
+- 线性投射层 E （本质就是全连接层）的维度为 $768\times 768$，前面的 768 来自图像输入，后一个 768 则是论文中维度 D，可以有 768, 1024, 1280 三个版本。
+- 输入经过线性投射层之后，$X_{196\times 768} \cdot D_{768\times 768}=Embedding_{196\times 768}$；
+- 拼接一个 cls tokens，变成 197×768；
+- 再加上 position embedding，还是 197×768；
+- 进入 Transformer Encoder，layer norm 不改变维度，多头自注意力的头如果是 12，则 kqv 的维度为 $197\times \frac{768}{12} = 197\times 64$，三个结果拼接又变回 197×768；
+- 经过 Transformer Encoder 中的 MLP 是会先将维度放大 4 倍，变为 196×3072，然后再缩小投射回去变为 197×768。
+
+<div align=center><img src="/assets/ViT-2022-05-28-09-53-25.png" alt="ViT-2022-05-28-09-53-25" style="zoom:50%;" /></div>
+
+### Hybrid 模型详解
+
+在论文 4.1 章节的 Model Variants 中详细讲了 Hybrid 混合模型，就是将传统 CNN 特征提取和 Transformer 进行结合。
+
+下图绘制的是以 ResNet50 作为特征提取器的混合模型，但这里的 Resnet 与之前讲的 Resnet 有些不同。首先这里的 R50 的卷积层采用的 StdConv2d 不是传统的 Conv2d，然后将所有的 BatchNorm 层替换成 GroupNorm 层。在原 Resnet50 网络中，stage1 重复堆叠 3 次，stage2 重复堆叠 4 次，stage3 重复堆叠 6 次，stage4 重复堆叠 3 次，但在这里的 R50 中，把 stage4 中的 3 个 Block 移至 stage3 中，所以 stage3 中共重复堆叠 9 次。
+
+通过 R50 Backbone 进行特征提取后，得到的特征矩阵 shape 是 [14, 14, 1024]，接着再输入 Patch Embedding 层，注意 Patch Embedding 中卷积层 Conv2d 的 kernel_size 和 stride 都变成了 1，只是用来调整 channel。后面的部分和前面 ViT 中讲的完全一样，就不在赘述。
+
+<div align=center><img src="/assets/ViT-2022-05-28-09-54-48.png" alt="ViT-2022-05-28-09-54-48" style="zoom:50%;" /></div>
 
 ### Experiments
 
@@ -219,7 +231,7 @@ All models were trained on TPUv3 hardware。
 
 <div align=center><img src="/assets/ViT-2022-04-24-11-18-53.png" alt="ViT-2022-04-24-11-18-53" style="zoom:50%;" /></div>
 
-在 JFT-300M 上预先训练的较小的 ViT-L/16 模型在所有任务上都优于 BiT-L(在同一数据集上预先训练的)，同时训练所需的计算资源要少得多。更大的模型 ViT-H/14 进一步提高了性能，特别是在更具挑战性 ImageNet, CIFAR-100 和 VTAB 数据集上。与现有技术相比，该模型预训练所需的计算量仍然要少得多。
+在 JFT-300M 上预先训练的较小的 ViT-L/16 模型在所有任务上都优于 BiT-L（在同一数据集上预先训练的），同时训练所需的计算资源要少得多。更大的模型 ViT-H/14 进一步提高了性能，特别是在更具挑战性 ImageNet, CIFAR-100 和 VTAB 数据集上。与现有技术相比，该模型预训练所需的计算量仍然要少得多。
 
 下图为 VTAB 数据集在 Natural, Specialized, 和 Structured 子任务与 CNN 模型相比的性能，ViT 模型仍然可以取得最优。
 
@@ -235,7 +247,7 @@ ViT 对于预训练数据的规模要求到底有多苛刻？作者分别在下�
 
 发现当在最小数据集 ImageNet 上进行预训练时，尽管进行了大量的正则化等操作，但 ViT-Large 的性能不如 ViT-Base 模型。使用稍微大一点的 ImageNet-21k 预训练，它们的表现也差不多。
 
-只有到了 JFT 300M，才能看到更大的 ViT 模型全部优势。图 3 还显示了不同大小的 BiT 模型跨越的性能区域。BiT CNNs 在 ImageNet 上的表现优于 ViT(尽管进行了正则化优化)，但在更大的数据集上，ViT 超过了所有的模型，取得了 SOTA。
+只有到了 JFT 300M，才能看到更大的 ViT 模型全部优势。图 3 还显示了不同大小的 BiT 模型跨越的性能区域。BiT CNNs 在 ImageNet 上的表现优于 ViT（尽管进行了正则化优化），但在更大的数据集上，ViT 超过了所有的模型，取得了 SOTA。
 
 作者还进行了一个实验：在 9M、30M 和 90M 的随机子集以及完整的 JFT300M 数据集上训练模型，结果如下图所示。ViT 在较小数据集上的计算成本比 ResNet 高，ViT-B/32 比 ResNet50 稍快；它在 9M 子集上表现更差，但在 90M + 子集上表现更好。ResNet152x2 和 ViT-L/16 也是如此。这个结果强化了一种直觉，即：
 
@@ -255,364 +267,8 @@ ViT 对于预训练数据的规模要求到底有多苛刻？作者分别在下�
 
 作者发现：在最底层，有些 head 也已经注意到了图像的大部分，说明模型已经可以 globally 地整合信息了，它们负责 global 信息的整合。其他的 head 只注意到图像的一小部分，说明它们负责 local 信息的整合。Attention Distance 随深度的增加而增加。
 
-整合局部信息的 attention head 在混合模型 (有 CNN 存在) 时，效果并不好，说明它可能与 CNN 的底层卷积有着类似的功能。
+整合局部信息的 attention head 在混合模型 （有 CNN 存在） 时，效果并不好，说明它可能与 CNN 的底层卷积有着类似的功能。
 
 作者给出了 attention 的可视化，注意到了适合分类的位置：
 
 <div align=center><img src="/assets/ViT-2022-04-24-11-25-08.png" alt="ViT-2022-04-24-11-25-08" style="zoom:50%;" /></div>
-
-## ViT 代码
-
-### 2.1 使用
-
-```python
-import torch
-from vit_pytorch import ViT
-
-v = ViT(
-    image_size = 256,
-    patch_size = 32,
-    num_classes = 1000,
-    dim = 1024,
-    depth = 6,
-    heads = 16,
-    mlp_dim = 2048,
-    dropout = 0.1,
-    emb_dropout = 0.1
-)
-
-img = torch.randn(1, 3, 256, 256)
-mask = torch.ones(1, 8, 8).bool() # optional mask, designating which patch to attend to
-
-preds = v(img, mask = mask) # (1, 1000)
-```
-
-- 传入参数的意义：image_size：输入图片大小。
-- patch_size：论文中 patch size：图片 的大小。
-- num_classes：数据集类别数。
-- dim：Transformer 的隐变量的维度。
-- depth：Transformer 的 Encoder，Decoder 的 Layer 数。
-- heads：Multi-head Attention
-- layer 的 head 数。
-- mlp_dim：MLP 层的 hidden dim。
-- dropout：Dropout rate。
-- emb_dropout：Embedding dropout rate。
-
-### 2.2 定义残差，FeedForward Layer 等
-
-```python
-class Residual(nn.Module):
-    def __init__(self, fn):
-        super().__init__()
-        self.fn = fn
-    def forward(self, x, **kwargs):
-        return self.fn(x, **kwargs) + x
-
-class PreNorm(nn.Module):
-    def __init__(self, dim, fn):
-        super().__init__()
-        self.norm = nn.LayerNorm(dim)
-        self.fn = fn
-    def forward(self, x, **kwargs):
-        return self.fn(self.norm(x), **kwargs)
-
-class FeedForward(nn.Module):
-    def __init__(self, dim, hidden_dim, dropout = 0.):
-        super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(dim, hidden_dim),
-            nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Linear(hidden_dim, dim),
-            nn.Dropout(dropout)
-        )
-    def forward(self, x):
-        return self.net(x)
-```
-
-Attention 和 Transformer，注释已标注在代码中：
-
-```python
-class Attention(nn.Module):
-    def __init__(self, dim, heads = 8, dim_head = 64, dropout = 0.):
-        super().__init__()
-        inner_dim = dim_head *  heads
-        self.heads = heads
-        self.scale = dim ** -0.5
-
-        self.to_qkv = nn.Linear(dim, inner_dim * 3, bias = False)
-        self.to_out = nn.Sequential(
-            nn.Linear(inner_dim, dim),
-            nn.Dropout(dropout)
-        )
-
-    def forward(self, x, mask = None):
-		# b, 65, 1024, heads = 8
-        b, n, _, h = *x.shape, self.heads
-
-		# self.to_qkv(x): b, 65, 64*8*3
-		# qkv: b, 65, 64*8
-        qkv = self.to_qkv(x).chunk(3, dim = -1)
-
-		# b, 65, 64, 8
-        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h = h), qkv)
-
-		# dots:b, 65, 64, 64
-        dots = torch.einsum('bhid,bhjd->bhij', q, k) * self.scale
-        mask_value = -torch.finfo(dots.dtype).max
-
-        if mask is not None:
-            mask = F.pad(mask.flatten(1), (1, 0), value = True)
-            assert mask.shape[-1] == dots.shape[-1], 'mask has incorrect dimensions'
-            mask = mask[:, None, :] * mask[:, :, None]
-            dots.masked_fill_(~mask, mask_value)
-            del mask
-
-		# attn:b, 65, 64, 64
-        attn = dots.softmax(dim=-1)
-
-		# 使用einsum表示矩阵乘法：
-		# out:b, 65, 64, 8
-        out = torch.einsum('bhij,bhjd->bhid', attn, v)
-
-		# out:b, 64, 65*8
-        out = rearrange(out, 'b h n d -> b n (h d)')
-
-		# out:b, 64, 1024
-        out =  self.to_out(out)
-        return out
-
-class Transformer(nn.Module):
-    def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout):
-        super().__init__()
-        self.layers = nn.ModuleList([])
-        for _ in range(depth):
-            self.layers.append(nn.ModuleList([
-                Residual(PreNorm(dim, Attention(dim, heads = heads, dim_head = dim_head, dropout = dropout))),
-                Residual(PreNorm(dim, FeedForward(dim, mlp_dim, dropout = dropout)))
-            ]))
-    def forward(self, x, mask = None):
-        for attn, ff in self.layers:
-            x = attn(x, mask = mask)
-            x = ff(x)
-        return x
-```
-
-### 2.3 Class ViT
-
-```python
-class ViT(nn.Module):
-    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0., emb_dropout = 0.):
-        super().__init__()
-        assert image_size % patch_size == 0, 'Image dimensions must be divisible by the patch size.'
-        num_patches = (image_size // patch_size) ** 2
-        patch_dim = channels * patch_size ** 2
-        assert num_patches > MIN_NUM_PATCHES, f'your number of patches ({num_patches}) is way too small for attention to be effective (at least 16). Try decreasing your patch size'
-        assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
-
-        self.patch_size = patch_size
-
-        self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))
-        self.patch_to_embedding = nn.Linear(patch_dim, dim)
-        self.cls_token = nn.Parameter(torch.randn(1, 1, dim))
-        self.dropout = nn.Dropout(emb_dropout)
-
-        self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim, dropout)
-
-        self.pool = pool
-        self.to_latent = nn.Identity()
-
-        self.mlp_head = nn.Sequential(
-            nn.LayerNorm(dim),
-            nn.Linear(dim, num_classes)
-        )
-
-    def forward(self, img, mask = None):
-        p = self.patch_size
-
-		# 图片分块
-        x = rearrange(img, 'b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = p, p2 = p)
-
-		# 降维(b,N,d)
-        x = self.patch_to_embedding(x)
-        b, n, _ = x.shape
-
-		# 多一个可学习的x_class，与输入concat在一起，一起输入Transformer的Encoder。(b,1,d)
-        cls_tokens = repeat(self.cls_token, '() n d -> b n d', b = b)
-        x = torch.cat((cls_tokens, x), dim=1)
-
-		# Positional Encoding：(b,N+1,d)
-        x += self.pos_embedding[:, :(n + 1)]
-        x = self.dropout(x)
-
-		# Transformer的输入维度x的shape是：(b,N+1,d)
-        x = self.transformer(x, mask)
-
-		# (b,1,d)
-        x = x.mean(dim = 1) if self.pool == 'mean' else x[:, 0]
-
-        x = self.to_latent(x)
-        return self.mlp_head(x)	# (b,1,num_class)
-```
-
-### 2.4 ViT 模型完整代码
-
-```python
-import torch
-from   torch import nn, einsum
-import torch.nn.functional as F
-from   einops import rearrange, repeat
-# from   einops.layers.torch import Rearrange
-
-
-class Residual(nn.Module):
-    def __init__(self, fn):
-        super().__init__()
-        self.fn = fn
-    def forward(self, x, **kwargs):
-        return self.fn(x, **kwargs) + x
-
-
-class PreNorm(nn.Module):
-    def __init__(self, dim, fn):
-        super().__init__()
-        self.norm = nn.LayerNorm(dim)
-        self.fn   = fn
-    def forward(self, x, **kwargs):
-        return self.fn(self.norm(x), **kwargs)
-
-
-class FeedForward(nn.Module):
-    def __init__(self, dim, hidden_dim, dropout = 0.):
-        super().__init__()
-        self.net = nn.Sequential(   nn.Linear(dim, hidden_dim),
-                                    nn.GELU(),
-                                    nn.Dropout(dropout),
-                                    nn.Linear(hidden_dim, dim),
-                                    nn.Dropout(dropout) )
-    def forward(self, x):
-        return self.net(x)
-
-
-class Attention(nn.Module):
-    def __init__(self, dim, heads = 8, dim_head = 64, dropout = 0.):
-        super().__init__()
-        inner_dim = dim_head *  heads
-        self.heads = heads
-        self.scale = dim ** -0.5
-
-        self.to_qkv = nn.Linear(dim, inner_dim * 3, bias = False)
-        self.to_out = nn.Sequential(nn.Linear(inner_dim, dim), nn.Dropout(dropout) )
-
-
-    def forward(self, x, mask = None):
-        # b, 65, 1024, heads = 8
-        b, n, _ = x.shape
-        h = self.heads
-        # self.to_qkv(x): b, 65, 64*8*3
-		# qkv: b, 65, 64*8
-        qkv = self.to_qkv(x).chunk(3, dim = -1)     # 沿-1轴分为3块
-
-        # b, 65, 64, 8
-        q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> b h n d', h = h), qkv)
-
-        # dots:b, 65, 64, 64
-        dots       =  torch.einsum('bhid,bhjd->bhij', q, k) * self.scale
-        mask_value = -torch.finfo(dots.dtype).max
-
-        if mask is not None:
-            mask = F.pad(mask.flatten(1), (1, 0), value = True)
-            assert mask.shape[-1] == dots.shape[-1], 'mask has incorrect dimensions'
-            mask = mask[:, None, :] * mask[:, :, None]
-            dots.masked_fill_(~mask, mask_value)
-            del mask
-
-        # attn:b, 65, 64, 64
-        attn = dots.softmax(dim=-1)
-
-        # 使用einsum表示矩阵乘法：
-		# out:b, 65, 64, 8
-        out = torch.einsum('bhij,bhjd->bhid', attn, v)
-
-        # out:b, 64, 65*8
-        out = rearrange(out, 'b h n d -> b n (h d)')
-
-        # out:b, 64, 1024
-        out =  self.to_out(out)
-        return out
-
-
-class Transformer(nn.Module):
-    def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout):
-        super().__init__()
-        self.layers = nn.ModuleList([])
-        for _ in range(depth):
-            self.layers.append(nn.ModuleList([  Residual(PreNorm(dim, Attention(  dim, heads = heads, dim_head = dim_head, dropout = dropout))),
-                                                Residual(PreNorm(dim, FeedForward(dim, mlp_dim, dropout = dropout)))    ]))
-    def forward(self, x, mask = None):
-        for attn, ff in self.layers:
-            x = attn(x, mask = mask)
-            x = ff(x)
-        return x
-
-
-class ViT(nn.Module):
-    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool = 'cls', channels = 3, dim_head = 64, dropout = 0., emb_dropout = 0.):
-        super().__init__()
-        assert image_size % patch_size == 0, 'Image dimensions must be divisible by the patch size.'
-        num_patches = (image_size // patch_size) ** 2
-        patch_dim   = channels * patch_size ** 2
-
-        # assert num_patches > MIN_NUM_PATCHES, f'your number of patches ({num_patches}) is way too small for attention to be effective (at least 16). Try decreasing your patch size'
-        assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
-
-        self.patch_size         = patch_size
-        self.pos_embedding      = nn.Parameter(torch.randn(1, num_patches + 1, dim))
-        self.patch_to_embedding = nn.Linear(patch_dim, dim)
-        self.cls_token          = nn.Parameter(torch.randn(1, 1, dim))
-        self.dropout            = nn.Dropout(emb_dropout)
-        self.transformer        = Transformer(dim, depth, heads, dim_head, mlp_dim, dropout)
-
-        self.pool               = pool
-        self.to_latent          = nn.Identity()
-
-        self.mlp_head           = nn.Sequential(  nn.LayerNorm(dim), nn.Linear(dim, num_classes) )
-
-    def forward(self, img, mask = None):
-        p = self.patch_size
-
-        # 图片分块
-        # print(img.shape)
-        x = rearrange(img, 'b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = p, p2 = p)    # 1,3,256,256  ->  1,64,3072
-
-        # 降维(b,N,d)
-        x       = self.patch_to_embedding(x)
-        b, n, _ = x.shape
-
-        # 多一个可学习的x_class，与输入concat在一起，一起输入Transformer的Encoder。(b,1,d)
-        cls_tokens = repeat(self.cls_token, '() n d -> b n d', b = b)
-        x = torch.cat((cls_tokens, x), dim=1)
-
-        # Positional Encoding：(b,N+1,d)
-        x += self.pos_embedding[:, :(n + 1)]
-        x  = self.dropout(x)
-
-        # Transformer的输入维度x的shape是：(b,N+1,d)
-        x = self.transformer(x, mask)
-
-        # (b,1,d)
-        x = x.mean(dim = 1) if self.pool == 'mean' else x[:, 0]
-        x = self.to_latent(x)
-        return self.mlp_head(x)	# (b,1,num_class)
-
-
-if __name__ == '__main__':
-    v = ViT(image_size=256, patch_size=32, num_classes=10, dim=1024, depth=6, heads=16, mlp_dim=2048, dropout=0.1,
-            emb_dropout=0.1)
-
-    img = torch.randn(1, 3, 256, 256)
-    mask = torch.ones(1, 8, 8).bool()  # optional mask, designating which patch to attend to
-
-    preds = v(img, mask=mask)  # (1, 1000)
-    print(preds)
-```

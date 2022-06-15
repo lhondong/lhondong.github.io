@@ -1,5 +1,16 @@
+---
+title: "MobileNet"
+subtitle: "Efficient Convolutional Neural Networks for Mobile Vision Applications"
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-33.jpg"
+mathjax: true
+tags:
+  - 模型压缩
+  - 轻量化
+---
 
-输入图片（Input）大小为 $I\times I$，卷积核（Filter）大小为 $K\times $，步长（stride）为 s，填充（Padding）的像素数为 p，那卷积层输出（Output）的特征图大小为： 
+输入图片（Input）大小为 $I\times I$，卷积核（Filter）大小为 $K\times $，步长（stride）为 s，填充（Padding）的像素数为 p，那卷积层输出（Output）的特征图大小为：
 
 $$
 O=\frac{I-K+2p}{s}+1
@@ -97,7 +108,7 @@ $$
 
 同样，我们对深度可分离卷积进行归纳。假设输入为 $h \times w \times d$，应用 $n$ 个 $k \times k \times d$ 的 filters（步长为 1，填充为 0，$h$ 为偶数），同时输出层为 $(h-k+1) \times (w-k+1) \times n$。
 
-- 2D 卷积的计算成本：$n \times k \times k \times d \times (h-k+1) \times (w-k+1)$ 
+- 2D 卷积的计算成本：$n \times k \times k \times d \times (h-k+1) \times (w-k+1)$
 - 深度可分卷积的计算成本：$d \times k \times k \times 1 \times (h-k+1) \times (w-k+1) + n \times 1 \times 1 \times d \times (h-k+1) \times (w-k+1)=(k\times k +n)\times d \times (h-k+1) \times (w-k+1)$
 - 深度可分卷积和 2D 卷积所需的计算成本比值为：$\frac{1}{n}+\frac{1}{k^2}$
 

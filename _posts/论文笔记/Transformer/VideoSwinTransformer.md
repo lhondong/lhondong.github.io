@@ -24,7 +24,7 @@ Video Swin Transformer 的 backbone 的整体架构和 Swin Transformer 大同�
 
 Patch Partiion 之后会紧跟一个 Linear Embedding，这两个模块在代码中是写在一起的，可以参见 [PatchEmbed3D](https://github.com/SwinTransformer/Video-Swin-Transformer/blob/master/mmaction/models/backbones/swin_transformer.py#L416)，就是直接用一个 3D 的卷积，用这个卷积充当全连接。如果 Embedding 的 dim 为 96，那么经过 Embedding 之后的尺寸还是 2×4×4×3=96。
 
-之后分别会经过多个 Video Swin Rransformer block 和 patch merging。Video Swin Transformer 是利用 attention 同一个 Window 内的特征进行特征融合的模块；patch merging 则是用来改变特征的 shape，可以当作 CNN 模型当中的 pooling，不过规则不同，而且 patch merging 还会改变特征的 dim，也就是 C 改变。整个过程模仿了 CNN 模块中的下采样过程，这也是为了让模型可以针对不同尺度生成特征。浅层可以看到小物体，深层则着重关注大物体。
+之后分别会经过多个 Video Swin Transformer block 和 patch merging。Video Swin Transformer 是利用 attention 同一个 Window 内的特征进行特征融合的模块；patch merging 则是用来改变特征的 shape，可以当作 CNN 模型当中的 pooling，不过规则不同，而且 patch merging 还会改变特征的 dim，也就是 C 改变。整个过程模仿了 CNN 模块中的下采样过程，这也是为了让模型可以针对不同尺度生成特征。浅层可以看到小物体，深层则着重关注大物体。
 
 Video Swin Transformer block 的结构如下图 2-2 所示。
 
@@ -44,7 +44,7 @@ backbone 的作用是提取视频的特征，真正来做分类的还是接在 b
 
 #### 2.2.1 Patch Partition
 
-图 3 是一段视频中的 8 帧，每帧都被分成了 8×8=64 个网格，假设每个网格的像素为 4×4，那么当 patch size 为 (1,4,4) 时，每个小网格就是一个 patch；当 patch size 为 (2,4,4) 时，没相邻两帧的同一个位置的网格组成一个 patch。这里和 Vision tranformer 中的划分方式相同，只不过多了时间的概念。
+图 3 是一段视频中的 8 帧，每帧都被分成了 8×8=64 个网格，假设每个网格的像素为 4×4，那么当 patch size 为 (1,4,4) 时，每个小网格就是一个 patch；当 patch size 为 (2,4,4) 时，每相邻两帧的同一个位置的网格组成一个 patch。这里和 Vision tranformer 中的划分方式相同，只不过多了时间的概念。
 
 <div align=center><img src="/assets/VideoSwinTransformer-2022-04-22-16-32-35.png" alt="VideoSwinTransformer-2022-04-22-16-32-35" style="zoom:50%;" /></div>
 
@@ -84,7 +84,7 @@ SW-MSA 如图 3 最右所示，图中 shift size 为 (2,2,2)，一般 shift size
 
 <div align=center><img src="/assets/VideoSwinTransformer-2022-04-23-17-03-21.png" alt="VideoSwinTransformer-2022-04-23-17-03-21" style="zoom:50%;" /></div>
 
-我们的目的是把图 3 中最右侧的 27 个 windows 变成和中间那样的 8 个 window。给每个 window 都标了序号，标序号的方式是从前往后，从上往下，从左往右。shift window 的方法就是把左上角的移到右下角，把前面的移到后面。这样一来，比如 [27,25,21,19,9,7,3,1] 就组成了 1 个 window，[18,16,12,10] 就组成了 1 个 window，依此类推，一共有 8 个 windows。平移的方式可以和上述的不同，只要保证可以把 27 个 windows 变成和 8 个 windows 的计算方式一样即可。
+我们的目的是把图 3 中右侧的 27 个 windows 变成和中间那样的 8 个 window。给每个 window 都标了序号，标序号的方式是从前往后，从上往下，从左往右。shift window 的方法就是把左上角的移到右下角，把前面的移到后面。这样一来，比如 [27,25,21,19,9,7,3,1] 就组成了 1 个 window，[18,16,12,10] 就组成了 1 个 window，依此类推，一共有 8 个 windows。平移的方式可以和上述的不同，只要保证可以把 27 个 windows 变成和 8 个 windows 的计算方式一样即可。
 
 这样在每个 window 做 self-attention 的时候，需要加一层 mask，可以说是引入了 Inductive bias。因为在组合而成的 window 内，各个小 window 我们不希望他们交换信息，因为这不是图像原有的位置，比如 17 和 11 经过 shift 之后，会在同一个 window 内做 attention，但是 11 是从上面移下来的，只是为了计算的统一，并不是物理意义上的同一个 window。有了 mask 就不一样了，**mask 的目的是告诉 17 号窗口内的每一个 patch，只和 17 号窗口内的 patches 做 attention，不和 11 号窗口内的做 attention，依此类推其他**。
 
@@ -106,7 +106,7 @@ def compute_mask(D, H, W, window_size, shift_size, device):
     return attn_mask
 ```
 
-如果 window 的大小为图中的 (P,M,M) 的话，attention mask 就是一个 (P×M×M，P×M×M) 的矩阵，这是一个对称矩阵，第 i 行第 j 列就表示 window 中的第 i 个 patch 和第 j 个 patch 的 window 编号是否是相同的，相同则为 0，不同则为 - 100。对角线上的元素必为 0。
+如果 window 的大小为图中的 (P,M,M) 的话，attention mask 就是一个 (P×M×M，P×M×M) 的矩阵，这是一个对称矩阵，第 i 行第 j 列就表示 window 中的第 i 个 patch 和第 j 个 patch 的 window 编号是否是相同的，相同则为 0，不同则为 -100。对角线上的元素必为 0。
 
 有人认为浅层的网络需要 SW-MSA，深层的就不需要了，因为浅层已经讲全局的信息都交流了，深层不需要进一步交流了。这种说法的确有一定的道理，但也要看网络的深度和 shift 的尺寸。
 
@@ -115,7 +115,7 @@ def compute_mask(D, H, W, window_size, shift_size, device):
 在上述的所有内容中，都没有涉及到位置的概念，也就是模型并不知道每个 patch 在图片中和其他 patches 的位置关系是怎么样的，最有也就是知道某几个 patch 是在同一个 window 内的，但 window 内的具体位置也是不知道的，因此就有了 Relative Position Bias。它是加在 attention 的部分的，下式中的 B 就是 Relative Position Bias。
 
 $$
-Attention(Q,K,V) = Softmax(QK^T/\sqrt{d} + B)V
+Attention(Q,K,V) = Softmax(\frac{QK^T}{\sqrt{d}} + B)V
 $$
 
 很多 Swin Tranformer 的文章都会讲这个 B 是如何得到的，但是却没有讲为什么要这样生成 B。其实只要知道了设计这个 B 的目的，就可以不用管是如何生成的了，甚至自己设计一种生成的方法都行。
@@ -128,12 +128,10 @@ B 是为了表示一个 windows 内，每个 patch 的相对位置，给每个�
 
 <div align=center><img src="/assets/VideoSwinTransformer-2022-04-23-17-10-45.png" alt="VideoSwinTransformer-2022-04-23-17-10-45" style="zoom:50%;" /></div>
 
-Relative Position Bias 示意图
-
-有了状态之后，就只需要在 B 这个矩阵中将相对位置的状态对号入座即可。这就是很多其他博客写的相对位置坐标相减，然后加个偏置，再乘个系数的地方。理解了为什么要这么做，看那些操作也就不会觉得奇怪了。
+有了状态之后，就只需要在 B 这个矩阵中将相对位置的状态对号入座即可。这就是相对位置坐标相减，然后加个偏置，再乘个系数。
 
 但最终使用的不是状态，而是状态对应的 embedding 值，这就需要有一个 table 来根据状态查找 embedding，这个 embedding 是模型训练出来的。
 
 ## 三、模型效果
 
-作者在三个数据集上进行了测试，分别是 [kinetics-400](https://deepmind.com/research/open-source/kinetics)，[kinetics-600](https://deepmind.com/research/open-source/kinetics) 和 [something-something v2](https://developer.qualcomm.com/software/ai-datasets/something-something)。每个数据集上都有着 state-of-art 的表现。
+作者在三个数据集上进行了测试，分别是 [Kinetics-400](https://deepmind.com/research/open-source/kinetics)，[Kinetics-600](https://deepmind.com/research/open-source/kinetics) 和 [Something-Something v2](https://developer.qualcomm.com/software/ai-datasets/something-something)。每个数据集上都有着 state-of-art 的表现。

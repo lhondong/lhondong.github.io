@@ -1,4 +1,14 @@
-
+---
+title: "ShuffleNet"
+subtitle: "An Extremely Efficient Convolutional Neural Network for Mobile Devices"
+layout: post
+author: "L Hondong"
+header-img: "img/post-bg-34.jpg"
+mathjax: true
+tags:
+  - 模型压缩
+  - 轻量化
+---
 ## 分组卷积 Grouped Convolution
 
 Grouped convolution 分组卷积，最早在 AlexNet 中出现，由于当时的硬件资源有限，训练 AlexNet 时卷积操作不能全部放在同一个 GPU 处理，因此作者把 feature maps 分给多个 GPU 分别进行处理，最后把多个 GPU 的结果进行融合。

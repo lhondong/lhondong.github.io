@@ -34,7 +34,7 @@
 
 CNN 的 Inductive Bias 是**局部性 (Locality)** 和**空间不变性 (Spatial Invariance)/平移等效性 (Translation Equivariance)**，即空间位置上的元素 (Grid Elements) 的联系/相关性近大远小，以及空间平移的不变性 (Kernel 权重共享）。
 
-- Locality: CNN用滑动窗口在图片上做卷积。假设是图片相邻的区域有相似的特征。i.e., 桌椅在一起的概率大，距离近的物品 相关性越强。
+- Locality: CNN 用滑动窗口在图片上做卷积。假设是图片相邻的区域有相似的特征。i.e., 桌椅在一起的概率大，距离近的物品 相关性越强。
 - Translation Equaivariance：$f(g(x)) = g(f(x))$  ，卷积 $f$ 和平移 $g$ 函数的顺序不影响结果。
 
 CNN 的卷积核像一个 template 模板，同样的物体无论移动到哪里，遇到了相同的卷积核，它的输出一致。

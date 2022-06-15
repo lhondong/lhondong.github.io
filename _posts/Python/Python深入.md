@@ -1,0 +1,797 @@
+
+# Python 深入
+
+## 数据类型的底层实现
+
+### 列表：地址引用
+
+#### 列表的底层实现
+
+- 列表内的元素可以分散的存储在内存中
+- 列表存储的，实际上是这些**元素的地址**，元素地址是连续存储的
+
+```python
+list_1 = [1, [22, 33, 44], (5, 6, 7), {"name": "Sarah"}]
+list_2 = list(list_1)   # 浅拷贝   与list_1.copy()功能一样
+```
+
+- 新增元素
+
+```python
+list_1.append(100)
+list_2.append("n")
+>>> list_1:   [1, [22, 33, 44], (5, 6, 7), {'name': 'Sarah'}, 100]
+>>> list_2:   [1, [22, 33, 44], (5, 6, 7), {'name': 'Sarah'}, 'n']
+```
+
+- 修改元素
+
+```python
+list_1[0] = 10
+list_2[0] = 20
+
+>>> list_1:   [10, [22, 33, 44], (5, 6, 7), {'name': 'Sarah'}, 100]
+>>> list_2:   [20, [22, 33, 44], (5, 6, 7), {'name': 'Sarah'}, 'n']
+```
+
+- 对列表型元素进行操作
+
+```python
+list_1[1].remove(44)
+list_2[1] += [55, 66]
+
+>>> list_1:   [10, [22, 33, 55, 66], (5, 6, 7), {'name': 'Sarah'}, 100]
+>>> list_2:   [20, [22, 33, 55, 66], (5, 6, 7), {'name': 'Sarah'}, 'n']
+```
+
+- 对元组型元素进行操作
+
+```python
+list_2[2] += (8,9)
+
+>>> list_1:   [10, [22, 33, 55, 66], (5, 6, 7), {'name': 'Sarah'}, 100]
+>>> list_2:   [20, [22, 33, 55, 66], (5, 6, 7, 8, 9), {'name': 'Sarah'}, 'n']
+```
+
+元组是不可变的！！！
+
+- 对字典型元素进行操作
+
+```python
+list_1[-2]["age"] = 18
+
+>>> list_1:   [10, [22, 33, 55, 66], (5, 6, 7), {'name': 'Sarah', 'age': 18}, 100]
+>>> list_2:   [20, [22, 33, 55, 66], (5, 6, 7, 8, 9), {'name': 'Sarah', 'age': 18}, 'n']
+```
+
+<div align=center><img src="/assets/Python深入-2022-06-12-15-53-38.png" alt="Python深入-2022-06-12-15-53-38" style="zoom:50%;" /></div>
+
+#### 引入深拷贝
+
+**浅拷贝之后**
+
+- 针对不可变元素（数字、字符串、元组）的操作，都各自生效了  
+- 针对不可变元素（列表、集合）的操作，发生了一些混淆
+
+**引入深拷贝**
+
+- 深拷贝将所有层级的相关元素全部复制，完全分开，泾渭分明，避免了上述问题
+
+### 字典：稀疏数组
+
+#### 快速的查找
+
+- list 查找
+
+```python
+import time
+
+ls_1 = list(range(1000000))
+ls_2 = list(range(500))+[-10]*500
+
+start = time.time()
+count = 0
+for n in ls_2:
+    if n in ls_1:
+        count += 1
+end = time.time()
+print("查找{}个元素，在ls_1列表中的有{}个，共用时{}秒".format(len(ls_2), count,round((end-start),2)))
+
+>>> 查找1000个元素，在ls_1列表中的有500个，共用时6.19秒
+```
+
+- 字典查找
+
+```python
+d = {i:i for i in range(100000)}
+ls_2 = list(range(500))+[-10]*500
+
+start = time.time()
+count = 0
+for n in ls_2:
+    try:
+        d[n]
+    except:
+        pass
+    else:
+        count += 1
+end = time.time()
+print("查找{}个元素，在ls_1列表中的有{}个，共用时{}秒".format(len(ls_2), count,round(end-start)))
+
+>>> 查找1000个元素，在ls_1列表中的有500个，共用时0秒
+```
+
+#### 字典的底层实现
+
+- 通过稀疏数组来实现值的存储与访问
+
+**字典的创建过程**
+
+1. 第一步：创建一个散列表（稀疏数组 N >> n）
+   - 通过 `hash()` 计算键的散列值
+
+```python
+print(hash("python"))
+print(hash(1024))
+print(hash((1,2)))
+
+>>> -4771046564460599764
+>>> 1024
+>>> 3713081631934410656
+
+d["age"] = 18    # 增加键值对的操作，首先会计算键的散列值hash("age")
+print(hash("age")) 
+
+>>> -1933502586724612390
+```
+
+1. 第二步：根据计算的散列值确定其在散列表中的位置
+   - 极个别时候，散列值会发生冲突，则内部有相应的解决冲突的办法
+2. 第三步：在该位置上存入值
+
+**键值对的访问过程**
+
+1. 第一步：计算要访问的键的散列值
+2. 第二步：根据计算的散列值，通过一定的规则，确定其在散列表中的位置
+3. 第三步：读取该位置上存储的值
+   - 如果存在，则返回该值
+   - 如果不存在，则报错KeyError
+
+#### 总结
+
+- **字典数据类型，通过空间换时间，实现了快速的数据查找**，也就注定了字典的空间利用效率低下
+- 因为散列值对应位置的顺序与键在字典中显示的顺序可能不同，因此表现出来字典是无序的
+- 如果 N = n，会产生很多位置冲突
+
+### 字符串：紧凑数组
+
+- 数据在内存中是连续存放的，效率更高，节省空间
+- 同为序列类型，列表每个元素的大小类型不同，无法知道为每个元素预留多大空间，且列表可变，所以采用引用数组，而字符串采用紧凑数组
+
+### 类型是否可变
+
+- 不可变类型：数字、字符串、元组，在生命周期中保持内容不变
+  - 换句话说，改变了就不是它自己了（id变了）
+  - 不可变对象的 += 操作，实际上创建了一个新的对象
+- 可变类型：列表、字典、集合
+  - id 保持不变，但是里面的内容可以变
+  - 可变对象的 += 操作 实际在原对象的基础上就地修改
+
+> 对于可变对象，`+` 操作改变了值，id 肯定会变，而 `+=` 是本地操作，其值原地修改。
+> 
+> 对于 `+` 号操作，可变对象和不可变对象调用的都是 `__add__` 操作，对于 `+=` 号操作，可变对象调用 `__iadd__`，不可变对象调用的是 `__add__` (不可变对象没有 `__iadd__`)，   `__iadd__` 是原地修改。
+
+####  删除列表内的特定元素
+
+- 存在运算删除法
+
+```python
+alist = ["d", "d", "d", "2", "2", "d" ,"d", "4"]
+s = "d"
+while True:
+    if s in alist:
+        alist.remove(s)
+    else:
+        break
+print(alist)
+
+>>> ['2', '2', '4']
+```
+
+缺点：每次存在运算，都要从头对列表进行遍历、查找、效率低
+
+- 一次性遍历元素执行删除
+
+```python
+alist = ["d", "d", "d", "2", "2", "d" ,"d", "4"]
+for s in alist:
+    if s == "d":
+        alist.remove(s)      # remove（s） 删除列表中第一次出现的该元素
+print(alist)
+
+>>> ['2', '2', 'd', 'd', '4'] # 无法完全删除
+```
+
+找到第一个 'd' 时，执行 remove 操作，实际列表只剩下后面的 7 个元素，但是 for 循环记忆的还是原来的列表，取过第 0 个元素，下一个要取第 1 个元素，而这实际上是原列表的第 3 个 'd'，跨过了原列表的第 2 个 'd'。
+
+- 解决方法：使用负向索引
+
+```python
+alist = ["d", "d", "d", "2", "2", "d" ,"d", "4"]
+for i in range(-len(alist), 0):
+    if alist[i] == "d":
+        alist.remove(alist[i])      # remove（s） 删除列表中第一次出现的该元素
+print(alist)
+
+>>> ['2', '2', '4']
+```
+
+for 循环从 -8 开始，删除第一个 'd' 之后 for 循环来到 -7，此时恰好是原列表的第二个 'd'，也就是 remove 后新列表的第一个 'd'，这样实现了完全删除。
+
+#### 多维列表的创建
+
+```python
+ls = [[0]*10]*5
+
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+ls[0][0] = 1
+
+[[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+```
+
+这是 `[]*5` 实际是浅拷贝，以这种方式创建的列表，list 里面的五个列表的内存是指向同一块，不管修改哪个列表，其他的列表也会跟着改变。
+
+## 简洁的语法
+
+### 解析语法
+
+```python
+ls = [[0]*10 for _ in range(5)]
+
+ls[0][0] = 1
+
+[[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+```
+
+- 解析语法的基本结构：列表解析（也称为列表推导）
+
+`[expression for value in iterable if conditihon]`
+
+- 三要素：表达式、可迭代对象、if 条件（可选）
+
+**执行过程**
+  
+1. 从可迭代对象中拿出一个元素
+2. 通过 if 条件（如果有的话），对元素进行筛选
+    - 若通过筛选：则把元素传递给表达式  
+    - 若未通过：则进入 1 步骤，进入下一次迭代
+3. 将传递给表达式的元素，代入表达式进行处理，产生一个结果
+4. 将 3 步产生的结果作为列表的一个元素进行存储
+5. 重复 1-4 步，直至迭代对象迭代结束，返回新创建的列表
+
+- 等价于如下代码
+
+```python
+result = []
+for value in iterale:
+    if condition:
+        result.append(expression)
+```
+
+- 求20以内奇数的平方 
+
+```python
+squares = []
+for i in range(1,21):
+    if i%2 == 1:
+        squares.append(i**2)
+
+squares = [i**2 for i in range(1,21) if i%2 == 1]
+```
+
+- 支持多变量
+
+```python
+x = [1, 2, 3]
+y = [1, 2, 3]
+
+results = [i*j for i,j in zip(x, y)]
+
+>>> [1, 4, 9]
+```
+
+- 支持循环嵌套
+
+```python
+colors = ["black", "white"]
+sizes = ["S", "M", "L"]
+tshirts = ["{} {}".format(color, size) for color in colors for size in sizes]
+
+>>> ['black S', 'black M', 'black L', 'white S', 'white M', 'white L']
+```
+
+- 解析语法构造字典
+
+`squares = {i: i**2 for i in range(10)}`
+
+- 解析语法构造集合
+
+`squares = {i**2 for i in range(10)}`
+
+- 生成器表达式
+
+`squares = (i**2 for i in range(10))`
+
+没有元组推导！
+
+```python
+colors = ["black", "white"]
+sizes = ["S", "M", "L"]
+tshirts = ("{} {}".format(color, size) for color in colors for size in sizes)
+for tshirt in tshirts:
+    print(tshirt)
+
+black S
+black M
+black L
+white S
+white M
+white L
+```
+
+### 条件表达式
+
+`expr1 if condition else expr2`
+
+```python
+n = -10
+x = n if n>= 0 else -n
+
+# 等价于
+if n >= 0:
+    x = n
+else:
+    x = -n
+```
+
+- **条件表达式和解析语法简单实用、运行速度相对更快一些，应多加使用**
+
+## 生成器
+
+```python
+ls = [i**2 for i in range(1, 1000001)]
+for i in ls:
+    pass # 每次只用一个数字
+```
+
+缺点：占用大量内存
+
+**生成器**  
+  
+1. 采用惰性计算的方式
+2. 无需一次性存储海量数据  
+3. 一边执行一边计算，只计算每次需要的值
+4. 实际上一直在执行 `next()` 操作，直到无值可取
+
+### 方法一：生成器表达式
+
+- 海量数据，不需存储
+
+`squares = (i**2 for i in range(1000000))`
+
+- 如果要一个一个打印出来，可以通过 `next()` 函数获得 generator 的下一个返回值 `next(squares)`
+- generator 保存的是算法，每次调用 `next(squares)`，就计算出 squares 的下一个元素的值，直到计算到最后一个元素，没有更多的元素时，抛出 StopIteration 的错误。
+- 可以使用 for 循环，因为 generator 也是可迭代对象
+
+```python
+squares = (i**2 for i in range(1000000))
+
+for i in squares:
+    print(i)
+```
+
+- 求0~100的和 
+
+```python
+sum((i for i in range(101)))
+5050
+```
+
+- 无需显示存储全部数据，节省内存
+
+### 方法二：生成器函数 yield
+
+- 生成斐波那契数列
+
+```python
+def fib(max):
+    ls = []
+    n, a, b = 0, 1, 1
+    while n < max:
+        ls.append(a)
+        a, b = b, a + b
+        n = n + 1
+    return ls
+
+fib(10)
+
+>>> [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+```
+
+- 构造生成器函数，在每次调用 `next()` 的时候执行，遇到 `yield` 语句返回，再次执行时从上次返回的 `yield` 语句处继续执行
+
+```python
+def fib(max):
+    ls = []
+    n, a, b = 0, 1, 1
+    while n < max:
+        yield a
+        a, b = b, a + b
+        n = n + 1
+
+fib(10)
+
+>>> <generator object fib at 0x000001BE11B19048>
+
+for i in fib(10):
+    print(i)
+```
+
+## 迭代器
+
+- 可直接作用于 for 循环的对象统称为可迭代对象：Iterable
+- 列表、元组、字符串、字典、集合、文件都会可迭代对象
+- 可以使用 `isinstance()` 判断一个对象是否是 Iterable 对象
+
+```python
+from collections import Iterable
+
+isinstance([1, 2, 3], Iterable)
+
+>>> True
+```
+
+- 生成器也是可迭代对象
+- 生成器不但可以用于 for 循环，还可以被 `next()` 函数调用
+
+迭代器
+
+- **可以被 `next()` 函数调用并不断返回下一个值，直至没有数据可取的对象称为迭代器：Iterator**
+- 生成器都是迭代器
+
+```python
+from collections import Iterator
+
+squares = (i**2 for i in range(5))
+isinstance(squares, Iterator)
+
+>>> True
+```
+
+- 列表、元组、字符串、字典、集合不是迭代器
+- 可以通过 `iter(Iterable)` 创建迭代器
+
+for item in Iterable 等价于：
+
+1. 先通过 `iter()` 函数获取可迭代对象 Iterable 的迭代器
+2. 然后对获取到的迭代器不断调用 `next()` 方法来获取下一个值并将其赋值给 item
+3. 当遇到 `StopIteration` 的异常后循环结束
+
+```python
+for x in [1, 2, 3, 4, 5]:
+    pass
+
+# 等价于
+
+# 首先获得Iterator对象:
+it = iter([1, 2, 3, 4, 5])
+# 循环:
+while True:
+    try:
+        # 获得下一个值:
+        x = next(it)
+    except StopIteration:
+        # 遇到StopIteration就退出循环
+        break
+```
+
+- zip enumerate 等 itertools 里的函数是迭代器
+- 文件是迭代器
+- 迭代器是可耗尽的
+
+```python
+squares = (i**2 for i in range(5))
+for square in squares:
+    print(square)
+
+Out:
+0
+1
+4
+9
+16
+
+for square in squares:
+    print(square)
+# 没有任何输出，被耗尽了
+```
+
+- `range()` 是可迭代对象 Iterable，但不是迭代器，不可被 `next()` 调用，且不会被耗尽
+- 可以称 `range()` 为惰性计算的序列
+  - 它是一种序列，但并不包含任何内存中的内容，而是通过计算来回答问题
+
+## 装饰器
+
+1. 需要对已开发上线的程序添加某些功能
+2. 不能对程序中函数的源代码进行修改
+3. 不能改变程序中函数的调用方式
+
+### 函数对象
+
+函数是 Python 中的第一类对象
+
+1. 可以把函数赋值给变量
+2. 对该变量进行调用，可实现原函数的功能
+
+```python
+def square(x):
+    return x**2
+
+print(type(square))      # square 是function类的一个实例
+
+>>> <class 'function'>
+
+pow_2 = square          # 可以理解成给这个函数起了个别名pow_2
+pow_2(5)
+square(5)
+```
+
+### 高阶函数
+
+1. 接收函数作为参数
+2. 或者返回一个函数  
+  
+**满足上述条件之一的函数称之为高阶函数**
+
+### 嵌套函数
+
+- 在函数内部定义一个函数
+
+### 闭包
+
+```python
+def outer():
+    x = 1
+    z = 10
+    
+    def inner():
+        y = x+100
+        return y, z
+        
+    return inner
+
+
+f = outer() #  f 实际是 inner，同时包含了 inner 函数本身 + outer 函数的环境
+print(f)
+
+>>> <function outer.<locals>.inner at 0x000001BE11B1D730>
+
+print(f.__closure__)         # __closure__ 属性中包含了来自外部函数的信息
+for i in f.__closure__:
+    print(i.cell_contents)
+
+>>> (<cell at 0x000001BE0FDE06D8: int object at 0x00007FF910D59340>, <cell at 0x000001BE0FDE0A98: int object at 0x00007FF910D59460>)，这里就是 x 和 z
+1
+10
+
+res = f() # 执行 inner 函数
+print(res)
+
+>>> (101, 10)
+```
+
+**闭包：延伸了作用域的函数**  
+  
+- 如果一个函数定义在另一个函数的作用域内，并且引用了外层函数的变量，则该函数称为闭包
+- 闭包是由函数及其相关的引用环境组合而成的实体(即：闭包=函数+引用环境)
+
+### 嵌套函数实现
+
+```python
+import time
+
+def timer(func):
+    
+    def inner():
+        print("inner run")
+        start = time.time()
+        func()
+        end = time.time()
+        print("{} 函数运行用时{:.2f}秒".format(func.__name__, (end-start)))
+    
+    return inner
+
+def f1():
+    print("f1 run")
+    time.sleep(1)
+
+f1 = timer(f1)             # 包含inner()和timer的环境，如传递过来的参数func
+f1()
+
+Out:
+inner run
+f1 run
+f1 函数运行用时1.00秒
+```
+
+**语法糖**
+
+- `@timer` 相当于实现了f1 = timer(f1)
+
+## Python 之禅
+
+```python
+import this
+```
+
+### The Zen of Python, by Tim Peters
+
+- **Beautiful is better than ugly.**
+- **Explicit is better than implicit.**
+- **Simple is better than complex.**
+- **Complex is better than complicated.**
+- **Flat is better than nested.**
+- **Sparse is better than dense.**
+- Readability counts.
+- Special cases aren't special enough to break the rules.
+- Although practicality beats purity.
+- Errors should never pass silently.
+- Unless explicitly silenced.
+- In the face of ambiguity, refuse the temptation to guess.
+- There should be one-- and preferably only one --obvious way to do it.
+- Although that way may not be obvious at first unless you're Dutch.
+- **Now is better than never.**
+- **Although never is often better than *right* now.**
+- **If the implementation is hard to explain, it's a bad idea.**
+- **If the implementation is easy to explain, it may be a good idea.**
+- Namespaces are one honking great idea -- let's do more of those!
+
+### 时间复杂度
+
+#### 三集不相交问题
+
+- 问题描述：假设有A、B、C三个序列，任一序列内部没有重复元素，欲知三个序列交集是否为空
+
+```python
+import random
+def creat_sequence(n):
+    A = random.sample(range(1, 1000), k=n)
+    B = random.sample(range(1000, 2000), k=n)
+    C = random.sample(range(2000, 3000), k=n)
+    return A, B, C
+
+
+A, B, C = creat_sequence(100)
+def no_intersection_1(A, B, C):
+    # 时间复杂度为 O(n^3)
+    for a in A:
+        for b in B:
+            for c in C:
+                if a == b == c:
+                    return False
+    return True
+
+
+def no_intersection_2(A, B, C):
+    # 时间复杂度为 O(n^2)
+    for a in A:
+        for b in B:
+            if a == b:
+                for c in C:
+                    if a == c:
+                        return False
+    return True
+```
+
+#### 元素唯一性问题
+
+- 问题描述：A 中的元素是否唯一
+
+```python
+def unique_1(A):
+    # 时间复杂度为 O(n^2)
+    for i in range(len(A)):
+        for j in range(i+1, len(A)):
+            if A[i] == A[j]:
+                return False
+    return True
+
+
+def unique_2(A):
+    # 时间复杂度为 O(n+nlogn)=O(nlogn)
+    A_sort = sorted(A) # sorted 快排与插入排序相结合，且使用二分，时间复杂度为 O(nlogn)
+    for i in range(len(A_sort)-1):
+            if A[i] == A[i+1]:
+                return False
+    return True
+```
+
+#### 第 n 个斐波那契数
+
+- a(n+2) = a(n+1) + a(n)
+
+- 递归 O(2^n)
+
+```python
+def bad_fibonacci(n):
+    if n <= 1:
+        return n
+    else:
+        return  bad_fibonacci(n-2)+ bad_fibonacci(n-1)
+```
+
+- 优化 O(n)
+
+```python
+def good_fibonacci(n):
+    i, a, b = 0, 0, 1
+    while i < n:
+        a, b = b, a+b
+        i += 1
+    return a
+```
+
+#### 最大盛水容器（leetcode第11题）
+
+- 暴力求解：双循环 O(n^2)
+
+```python
+def max_area_double_cycle(height):
+    """暴力穷举双循环"""
+    i_left, i_right, max_area = 0, 0, 0
+    for i in range(len(height)-1):
+        for j in range(i+1, len(height)):
+            area = (j-i) * min(height[j], height[i])
+            if area > max_area:
+                i_left, i_right, max_area = i, j, area
+    return  i_left, i_right, max_area
+```
+
+- 双向指针 O(n)
+
+```python
+def max_area_bothway_points(height):
+    """双向指针法"""
+    i = 0
+    j = len(height)-1
+    i_left, j_right, max_area=0, 0, 0
+    while i < j:
+        area = (j-i) * min(height[i], height[j])
+        if area > max_area:
+            i_left, j_right, max_area = i, j, area
+        if height[i] == min(height[i], height[j]):
+            i += 1
+        else:
+            j -= 1
+    return i_left, j_right, max_area
+```
+
+- 是不是时间复杂度低就一定好?
+  - 100000n vs 0.00001n^2
+- 影响运算速度的因素
+  - 硬件
+  - 软件
+  - 算法

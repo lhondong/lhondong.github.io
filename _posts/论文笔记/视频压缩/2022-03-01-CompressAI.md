@@ -142,12 +142,12 @@ python -m compressai.utils.eval_model checkpoint /path/to/images/folder/ -a $ARC
 
 使用 inference 的时候：
 
-1. 对于 entropy estimation 使用 Cuda 会比使用 CPU 快
-2. 对于自回归模型，不建议使用 Cuda 编解码，因为熵编码部分，会在 CPU 上顺序执行。
+1. 对于 entropy estimation 使用 CUDA 会比使用 CPU 快
+2. 对于自回归模型，不建议使用 CUDA 编解码，因为熵编码部分，会在 CPU 上顺序执行。
 3. GPU 对非自回归模型推理，在码率估计和实际压缩都能起到加速作用。GPU 对自回归模型不能起到加速左右，因为熵编码是在 CPU 中线性运算编码的。
 4. 使用 GPU 或者 CPU，码率估计结果是与实际结果是接近的。
 
-<div align=center><img src="/assets/2022-03-01-CompressAI-2022-04-24-10-14-09.png" alt="2022-03-01-CompressAI-2022-04-24-10-14-09" style="zoom:100%;" /></div>
+<div align=center><img src="/assets/CompressAI-2022-04-24-10-14-09.png" alt="CompressAI-2022-04-24-10-14-09" style="zoom:100%;" /></div>
 
 ### 更新CDF
 

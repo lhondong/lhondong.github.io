@@ -21,7 +21,7 @@ with plt.style.context("seaborn-white"):
 ```
 ### 要不要 show
 
-- ipython中可用魔术方法   %matplotlib inline
+- jupyter 中可用魔术方法   %matplotlib inline
 - IDE: plt.show()
 
 ### 保存图片
