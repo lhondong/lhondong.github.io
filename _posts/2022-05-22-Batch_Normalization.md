@@ -58,7 +58,7 @@ BN 的核心思想不是为了防止梯度消失或者防止过拟合，其核�
 
 神经网络中传递的张量数据，其维度通常记为 [N, H, W, C]，其中 N 是 batch_size，H、W 是行、列，C 是通道数。那么上式中 BN 的输入集合 B 就是下图中蓝色的部分：
 
-<div align=center><img src="https://lhondong-pic.oss-cn-shenzhen.aliyuncs.com/img/assets/Batch_normalization-2022-05-22-15-19-58.png" alt="Batch_normalization-2022-05-22-15-19-58" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/Batch_normalization-2022-05-22-15-19-58.png" alt="Batch_normalization-2022-05-22-15-19-58" style="zoom:50%;" /></div>
 
 均值的计算，就是在一个批次内，将每个通道中的数字单独加起来，再除以 N×H×W。举个例子：该批次内有 10 张图片，每张图片有三个通道 RBG，每张图片的高、宽是 H、W，那么均值就是计算 10 张图片 R 通道的像素数值总和除以 10×H×W，再计算 B 通道全部像素值总和除以 10×H×W，最后计算 G 通道的像素值总和除以 10×H×W。方差的计算类似。
 
@@ -144,7 +144,7 @@ LN 只包括上面的第 2 部分参数，因为它和 batch 无关，无需记�
 Batch Norm 是对不同样本间的同一维特征做归一化，即标准化某一特征整体的分布。
 Layer Norm 是对同一样本的不同维特征问做归一化，即标准化某一样本特征的分布。
 
-<div align=center><img src="https://lhondong-pic.oss-cn-shenzhen.aliyuncs.com/img/assets/Batch_normalization-2022-05-21-23-36-25.png" alt="Batch_normalization-2022-05-21-23-36-25" style="zoom:50%;" /></div>
+<div align=center><img src="/assets/Batch_normalization-2022-05-21-23-36-25.png" alt="Batch_normalization-2022-05-21-23-36-25" style="zoom:50%;" /></div>
 
 1. 两者做 Norm 的维度不一样，BN 是在不同样本的同一特征维度，而 LN 一般是在样本的维度。
 2. BN 需要在训练过程中，滑动平均累积每个神经元的均值和方差，并保存在模型文件中用于推理过程，而 LN 不需要。
